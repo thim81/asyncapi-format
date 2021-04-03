@@ -15,7 +15,7 @@ const tests = fs.readdirSync(__dirname).filter(file => {
 // const tests = ['yaml-no-sort']
 // console.log('tests',tests);
 
-describe('openapi-format tests', () => {
+describe('asyncapi-format tests', () => {
     tests.forEach((test) => {
         describe(test, () => {
             it('should match expected output', (done) => {
@@ -121,7 +121,7 @@ describe('openapi-format tests', () => {
                     result = asyncapiFormat.asyncapiFilter(result, options);
                 }
 
-                // Rename title OpenAPI document
+                // Rename title AsyncAPI document
                 if (options.rename) {
                     result = asyncapiFormat.asyncapiRename(result, options);
                 }

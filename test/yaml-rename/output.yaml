@@ -1,6 +1,6 @@
 asyncapi: 2.0.0
 info:
-  title: OpenAPI Petstore - OpenAPI 3.0
+  title: Streetlights - AsyncAPI 2.0
   version: 1.0.0
   description: >
     The Smartylighting Streetlights API allows you to remotely manage the city

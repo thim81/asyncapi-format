@@ -1,6 +1,6 @@
 {
   "name": "asyncapi-format",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Format a AsyncAPI document by ordering and filtering fields.",
   "keywords": [
     "asyncapi",
@@ -23,7 +23,7 @@
   "author": "Tim Haselaars",
   "main": "bin/cli.js",
   "bin": {
-    "openapi-format": "bin/cli.js"
+    "asyncapi-format": "bin/cli.js"
   },
   "directories": {
     "test": "test"
