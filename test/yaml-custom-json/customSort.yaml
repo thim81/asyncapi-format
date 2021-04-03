@@ -1,0 +1,87 @@
+root:
+    - defaultContentType
+    - channels
+    - components
+    - tags
+    - x-tagGroups
+    - externalDocs
+    - asyncapi
+    - id
+    - info
+    - servers
+channels:
+    - summary
+    - description
+    - parameters
+    - subscribe
+    - publish
+    - responses
+    - bindings
+parameters:
+    - name
+    - in
+    - description
+    - required
+    - schema
+subscribe:
+    - operationId
+    - summary
+    - description
+    - message
+    - traits
+    - tags
+    - bindings
+publish:
+    - operationId
+    - summary
+    - description
+    - message
+    - traits
+    - tags
+    - bindings
+messages:
+    - name
+    - title
+    - summary
+    - description
+    - headers
+    - payload
+    - contentType
+payload:
+    - description
+    - type
+    - items
+    - properties
+    - format
+    - example
+    - default
+components:
+    - parameters
+    - messages
+    - schemas
+schema:
+    - description
+    - type
+    - items
+    - properties
+    - format
+    - example
+    - default
+schemas:
+    - description
+    - type
+    - items
+    - properties
+    - format
+    - example
+    - default
+properties:
+    - description
+    - type
+    - items
+    - format
+    - example
+    - default
+    - enum
+    - minimum
+    - maximum
