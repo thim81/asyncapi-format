@@ -2,7 +2,7 @@
 
 Format an AsyncAPI document by ordering and filtering fields.
 
-The asyncapi-format CLI can load an OpenAPI file, sorts the AsyncAPI fields by ordering them in a hierarchical order,
+The asyncapi-format CLI can load an AsyncAPI file, sorts the AsyncAPI fields by ordering them in a hierarchical order,
 and can output the file with clean indenting, to either JSON or YAML.
 
 Next to the ordering, the CLI provides additional options to filter fields & parts of the AsyncAPI document based on
@@ -230,7 +230,7 @@ components:
             payload:
                 $ref: "#/components/schemas/lightMeasuredPayload"
             tags:
-                - metadata
+                - measure
 
 ```  
 
@@ -281,10 +281,10 @@ channels:
 $ asyncapi-format asyncapi.json -o asyncapi-formatted.json
 ```
 
--Format a AsyncAPI document with the default sorting and saves it as a new YAML file
+- Format a AsyncAPI document with the default sorting and saves it as a new YAML file
 
 ```shell
-$ asyncapi-format asyncapi.yaml -o asyncapi.yaml
+$ asyncapi-format asyncapi.yaml -o asyncapi-formatted.yaml
 ```
 
 - Format a AsyncAPI document with the default sorting and output it as JSON to STDOUT
@@ -318,7 +318,7 @@ rename action.
 
 ## CLI filter usage
 
-- Format a AsyncAPI document by filtering fields, default sorting and saves it as a new file
+- Format an AsyncAPI document by filtering fields, default sorting and saves it as a new file
 
 When you want to strip certain flags, tags, operations, operationID's, you can pass a `filterFile` which contains the
 specific values for the flags, tags, operations, operationID's.

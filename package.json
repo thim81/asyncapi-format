@@ -1,7 +1,7 @@
 {
   "name": "asyncapi-format",
-  "version": "1.0.1",
-  "description": "Format a AsyncAPI document by ordering and filtering fields.",
+  "version": "1.0.2",
+  "description": "Format an AsyncAPI document by ordering and filtering fields.",
   "keywords": [
     "asyncapi",
     "format",
