@@ -1,42 +1,58 @@
 {
-  "name": "asyncapi-format",
-  "version": "1.0.2",
-  "description": "Format an AsyncAPI document by ordering and filtering fields.",
-  "keywords": [
-    "asyncapi",
-    "format",
-    "sort",
-    "order",
-    "filter",
-    "rename",
-    "cli"
-  ],
-  "homepage": "https://github.com/thim81/asyncapi-format#readme",
-  "bugs": {
-    "url": "https://github.com/thim81/asyncapi-format/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thim81/asyncapi-format.git"
-  },
-  "license": "MIT",
-  "author": "Tim Haselaars",
-  "main": "bin/cli.js",
-  "bin": {
-    "asyncapi-format": "bin/cli.js"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "npx mocha"
-  },
-  "dependencies": {
-    "commander": "^7.1.0",
-    "js-yaml": "^4.0.0",
-    "traverse": "^0.6.6"
-  },
-  "devDependencies": {
-    "mocha": "^8.0.1"
-  }
+    "name": "asyncapi-format",
+    "version": "1.0.2",
+    "description": "Format an AsyncAPI document by ordering, formatting and filtering fields.",
+    "keywords": [
+        "asyncapi",
+        "format",
+        "sort",
+        "order",
+        "filter",
+        "rename",
+        "case",
+        "cli"
+    ],
+    "homepage": "https://github.com/thim81/asyncapi-format#readme",
+    "bugs": {
+        "url": "https://github.com/thim81/asyncapi-format/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/thim81/asyncapi-format.git"
+    },
+    "license": "MIT",
+    "author": "Tim Haselaars",
+    "main": "bin/cli.js",
+    "files": [
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE",
+        "asyncapi-format.js",
+        "util-log-output.js",
+        "util-types.js",
+        "defaultSort.json",
+        "defaultFilter.json",
+        "package-lock.json"
+    ],
+    "bin": {
+        "asyncapi-format": "bin/cli.js"
+    },
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "jest --colors --verbose --reporters=default --collectCoverage --no-cache",
+        "release": "np --branch main"
+    },
+    "dependencies": {
+        "commander": "^7.1.0",
+        "js-yaml": "^4.0.0",
+        "traverse": "^0.6.6"
+    },
+    "devDependencies": {
+        "jest": "^27.4.5"
+    },
+    "engines": {
+        "node": ">=12"
+    }
 }
