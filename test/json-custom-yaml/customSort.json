@@ -1,13 +1,99 @@
 {
-    "root": ["asyncapi", "id", "info","channels", "components", "tags", "x-tagGroups", "externalDocs", "servers", "defaultContentType"],
-    "channels": ["summary", "description", "subscribe", "publish", "parameters", "bindings"],
-    "parameters": ["name","in", "description", "required", "schema"],
-    "subscribe": ["message", "operationId", "summary", "description", "traits", "tags", "bindings"],
-    "publish": ["message", "operationId", "summary", "description", "traits", "tags", "bindings"],
-    "messages": ["name", "title", "summary", "description", "headers", "payload", "contentType"],
-    "payload": ["description", "type", "items", "properties", "format", "example", "default"],
-    "components": ["parameters", "messages", "schemas"],
-    "schema": ["description", "type", "items", "properties", "format", "example", "default"],
-    "schemas": ["description", "type", "items", "properties", "format", "example", "default"],
-    "properties": ["description", "type","items", "format", "example", "default","enum", "minimum", "maximum"]
+  "root": [
+    "asyncapi",
+    "id",
+    "info",
+    "channels",
+    "components",
+    "tags",
+    "x-tagGroups",
+    "externalDocs",
+    "servers",
+    "defaultContentType"
+  ],
+  "channels": [
+    "summary",
+    "description",
+    "subscribe",
+    "publish",
+    "parameters",
+    "bindings"
+  ],
+  "parameters": [
+    "name",
+    "in",
+    "description",
+    "required",
+    "schema"
+  ],
+  "subscribe": [
+    "message",
+    "operationId",
+    "summary",
+    "description",
+    "traits",
+    "tags",
+    "bindings"
+  ],
+  "publish": [
+    "message",
+    "operationId",
+    "summary",
+    "description",
+    "traits",
+    "tags",
+    "bindings"
+  ],
+  "messages": [
+    "name",
+    "title",
+    "summary",
+    "description",
+    "headers",
+    "payload",
+    "contentType"
+  ],
+  "payload": [
+    "description",
+    "type",
+    "items",
+    "properties",
+    "format",
+    "example",
+    "default"
+  ],
+  "components": [
+    "parameters",
+    "messages",
+    "schemas"
+  ],
+  "schema": [
+    "description",
+    "type",
+    "items",
+    "properties",
+    "format",
+    "example",
+    "default"
+  ],
+  "schemas": [
+    "description",
+    "type",
+    "items",
+    "properties",
+    "format",
+    "example",
+    "default"
+  ],
+  "properties": [
+    "description",
+    "type",
+    "items",
+    "format",
+    "example",
+    "default",
+    "enum",
+    "minimum",
+    "maximum"
+  ]
 }

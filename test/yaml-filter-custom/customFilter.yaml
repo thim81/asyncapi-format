@@ -1,7 +1,7 @@
 flags:
   - x-visibility
-flagValues: []
-tags: []
+flagValues: [ ]
+tags: [ ]
 operationIds:
   - dimLight
   - turnOff

@@ -198,9 +198,9 @@ servers:
           - '1883'
           - '8883'
     security:
-      - apiKey: []
+      - apiKey: [ ]
       - supportedOauthFlows:
           - streetlights:on
           - streetlights:off
           - streetlights:dim
-      - openIdConnectWellKnown: []
+      - openIdConnectWellKnown: [ ]
