@@ -383,7 +383,7 @@ control systems.
 example:
 
 ```shell
-$ asyncapi-format asyncapi.json --configFil asyncapi-format-options.json
+$ asyncapi-format asyncapi.json --configFile asyncapi-format-options.json
 ```
 
 The formatting will happen based on all the options set in the `asyncapi-format-options.json` file. All the
