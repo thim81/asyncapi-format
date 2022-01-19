@@ -1,6 +1,6 @@
-asyncapi: 2.0.0
+asyncapi: 2.2.0
 info:
-  title: Streetlights API
+  title: Streetlights Kafka API
   version: 1.0.0
   description: >
     The Smartylighting Streetlights API allows you to remotely manage the city
@@ -31,15 +31,15 @@ servers:
           - '1883'
           - '8883'
     security:
-      - apiKey: [ ]
+      - apiKey: []
       - supportedOauthFlows:
           - streetlights:on
           - streetlights:off
           - streetlights:dim
-      - openIdConnectWellKnown: [ ]
+      - openIdConnectWellKnown: []
 defaultContentType: application/json
 channels:
-  smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured:
+  smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured:
     description: The topic on which measured values may be produced and consumed.
     parameters:
       streetlightId:
@@ -53,7 +53,7 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/lightMeasured'
-  smartylighting/streetlights/1/0/action/{streetlightId}/turn/on:
+  smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
@@ -63,11 +63,11 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/turnOnOff'
-  smartylighting/streetlights/1/0/action/{streetlightId}/turn/off:
+  smartylighting.streetlights.1.0.action.{streetlightId}.turn.off:
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
-  smartylighting/streetlights/1/0/action/{streetlightId}/dim:
+  smartylighting.streetlights.1.0.action.{streetlightId}.dim:
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
