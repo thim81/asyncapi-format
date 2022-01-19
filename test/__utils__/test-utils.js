@@ -1,5 +1,5 @@
 const fs = require("fs");
-const sy = require("@stoplight/yaml");
+const jy = require('js-yaml');
 const {exec} = require("child_process");
 const path = require("path");
 
@@ -15,7 +15,7 @@ async function loadTest(folder, inputType = 'yaml', outType = 'yaml') {
         if (outType === 'json') {
             input = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
         } else {
-            input = sy.parse(fs.readFileSync(inputPath, 'utf8'));
+            input = jy.load(fs.readFileSync(inputPath, 'utf8'));
         }
     } catch (err) {
         // File not found = {} will be used
@@ -25,7 +25,7 @@ async function loadTest(folder, inputType = 'yaml', outType = 'yaml') {
         if (outType === 'json') {
             outputBefore = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
         } else {
-            outputBefore = sy.parse(fs.readFileSync(outputPath, 'utf8'));
+            outputBefore = jy.load(fs.readFileSync(outputPath, 'utf8'));
         }
     } catch (err) {
         // File not found = {} will be used
@@ -37,7 +37,7 @@ async function loadTest(folder, inputType = 'yaml', outType = 'yaml') {
         if (outType === 'json') {
             outputAfter = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
         } else {
-            outputAfter = sy.parse(fs.readFileSync(outputPath, 'utf8'));
+            outputAfter = jy.load(fs.readFileSync(outputPath, 'utf8'));
         }
     } catch (err) {
         //
