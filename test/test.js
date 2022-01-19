@@ -97,7 +97,6 @@ describe('asyncapi-format tests', () => {
         try {
           // Load customCasing.yaml
           casingFile = path.join(__dirname, test, 'customCasing.yaml');
-          // filterOptions.filterSet = jy.load(fs.readFileSync(filterFile, 'utf8'));
           casingOptions.casingSet = jy.load(fs.readFileSync(casingFile, 'utf8'));
           options = Object.assign({}, options, casingOptions);
         } catch (ex) {
@@ -105,7 +104,6 @@ describe('asyncapi-format tests', () => {
           try {
             // Fallback to customCasing.json
             casingFile = path.join(__dirname, test, 'customCasing.json');
-            // filterOptions.filterSet = jy.load(fs.readFileSync(filterFile, 'utf8'));
             casingOptions.casingSet = jy.load(fs.readFileSync(casingFile, 'utf8'));
             options = Object.assign({}, options, casingOptions);
           } catch (ex) {
@@ -170,16 +168,24 @@ describe('asyncapi-format tests', () => {
         }
 
         // Initialize data
-        // let result = input;
+        let result = input;
 
-        let result = asyncapiFormat.asyncapiSort(input, options);
+        // Filter OpenAPI document
         if (options.filterSet) {
-          result = asyncapiFormat.asyncapiFilter(result, options);
+          const resFilter = asyncapiFormat.asyncapiFilter(result, options);
+          if (resFilter.data) result = resFilter.data;
+        }
+
+        // Sort OpenAPI document
+        if (options.sort === true) {
+          const resFormat = asyncapiFormat.asyncapiSort(result, options);
+          if (resFormat.data) result = resFormat.data;
         }
 
         // Rename title AsyncAPI document
         if (options.rename) {
-          result = asyncapiFormat.asyncapiRename(result, options);
+          const resRename = asyncapiFormat.asyncapiRename(result, options);
+          if (resRename.data) result = resRename.data;
         }
 
         try {
@@ -187,7 +193,8 @@ describe('asyncapi-format tests', () => {
             if ((options.output && options.output.indexOf('.json') >= 0) || options.json) {
               output = JSON.stringify(result, null, 2);
             } else {
-              output = jy.dump(result);
+              let lineWidth = (options.lineWidth) ? options.lineWidth : 160
+              output = jy.dump(result, {lineWidth: lineWidth});
             }
             fs.writeFileSync(outputFilename, output, 'utf8');
           }

@@ -2,18 +2,13 @@ asyncapi: 2.2.0
 info:
   title: Streetlights - AsyncAPI 2.0
   version: 1.0.0
-  description: >
-    The Smartylighting Streetlights API allows you to remotely manage the city
-    lights.
-
+  description: |
+    The Smartylighting Streetlights API allows you to remotely manage the city lights.
 
     ### Check out its awesome features:
 
-
     * Turn a specific streetlight on/off 🌃
-
     * Dim a specific streetlight 😎
-
     * Receive real-time information about environmental lighting conditions 📈
   license:
     name: Apache 2.0
@@ -45,9 +40,7 @@ channels:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
     publish:
-      summary: >-
-        Inform about environmental lighting conditions of a particular
-        streetlight.
+      summary: Inform about environmental lighting conditions of a particular streetlight.
       operationId: receiveLightMeasurement
       traits:
         - $ref: '#/components/operationTraits/kafka'
@@ -88,9 +81,7 @@ components:
     lightMeasured:
       name: lightMeasured
       title: Light measured
-      summary: >-
-        Inform about environmental lighting conditions of a particular
-        streetlight.
+      summary: Inform about environmental lighting conditions of a particular streetlight.
       contentType: application/json
       traits:
         - $ref: '#/components/messageTraits/commonHeaders'
