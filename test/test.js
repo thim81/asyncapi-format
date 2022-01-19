@@ -170,15 +170,21 @@ describe('asyncapi-format tests', () => {
         // Initialize data
         let result = input;
 
-        // Filter OpenAPI document
+        // Filter AsyncAPI document
         if (options.filterSet) {
           const resFilter = asyncapiFormat.asyncapiFilter(result, options);
           if (resFilter.data) result = resFilter.data;
         }
 
-        // Sort OpenAPI document
+        // Sort AsyncAPI document
         if (options.sort === true) {
           const resFormat = asyncapiFormat.asyncapiSort(result, options);
+          if (resFormat.data) result = resFormat.data;
+        }
+
+        // Change case AsyncAPI document
+        if (options.casingSet) {
+          const resFormat = asyncapiFormat.asyncapiChangeCase(result, options);
           if (resFormat.data) result = resFormat.data;
         }
 

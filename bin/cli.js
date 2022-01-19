@@ -17,7 +17,7 @@ program
   .description('Format a AsyncAPI document by ordering and filtering fields.')
   .option('-o, --output <output>', 'write the formatted AsyncAPI to an output file path.')
   .option('-s, --sortFile <sortFile>', 'The file to specify custom OpenAPI AsyncAPI ordering.', 'defaultSort.json')
-  .option('-c, --casingFile <filterFile>', 'The file to specify casing rules.')
+  .option('-c, --casingFile <casingFile>', 'The file to specify casing rules.')
   .option('-f, --filterFile <filterFile>', 'The file to specify filter rules.')
   .option('-c, --configFile <configFile>', 'The file with the AsyncAPI-format CLI options.')
   .option('--no-sort', 'dont sort the AsyncAPI file')
@@ -109,6 +109,21 @@ async function run(asFile, options) {
     }
   }
 
+  // apply change casing by casing file if present
+  if (options && options.casingFile) {
+    infoOut(`- Casing file:\t\t${options.casingFile}`) // LOG - Casing file
+    try {
+      let casingOptions = {casingSet: {}}
+      casingOptions.casingSet =  jy.load(fs.readFileSync(options.casingFile, 'utf8'));
+      options = Object.assign({}, options, casingOptions);
+    } catch (err) {
+      console.error('\x1b[31m', `Casing file error - no such file or directory "${options.casingFile}"`)
+      if (options.verbose >= 1) {
+        console.error(err)
+      }
+    }
+  }
+
   infoOut(`- Input file:\t\t${asFile}`) // LOG - Input file
 
   // Get
@@ -128,6 +143,12 @@ async function run(asFile, options) {
   // Format & Order AsyncAPI document
   if (options.sort === true) {
     const resFormat = await asyncapiFormat.asyncapiSort(res, options);
+    if (resFormat.data) res = resFormat.data
+  }
+
+  // Change case OpenAPI document
+  if (options.casingSet) {
+    const resFormat = await asyncapiFormat.asyncapiChangeCase(res, options);
     if (resFormat.data) res = resFormat.data
   }
 

@@ -1,0 +1,7 @@
+unusedComponents:
+  - schemas
+  - parameters
+  - headers
+  - requestBodies
+  - responses
+
