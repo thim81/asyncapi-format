@@ -1,4 +1,10 @@
 # asyncapi-format
+![asyncapi-format icon](./assets/asyncapi-format-logo.svg)
+
+<a href="https://www.npmjs.com/package/asyncapi-format" alt="Latest Stable Version">![npm](https://img.shields.io/npm/v/asyncapi-format.svg)</a>
+<a href="https://www.npmjs.com/package/asyncapi-format" alt="Total Downloads">![npm](https://img.shields.io/npm/dw/asyncapi-format.svg)</a>
+
+# asyncapi-format
 
 Format an AsyncAPI document by ordering and filtering fields.
 
@@ -8,18 +14,14 @@ and can output the file with clean indenting, to either JSON or YAML.
 Next to the ordering, the CLI provides additional options to filter fields & parts of the AsyncAPI document based on
 flags, tags, operations and operationID's.
 
-<a href="https://www.npmjs.com/package/asyncapi-format" alt="Latest Stable Version">![npm](https://img.shields.io/npm/v/asyncapi-format.svg)</a>
-<a href="https://www.npmjs.com/package/asyncapi-format" alt="Total Downloads">![npm](https://img.shields.io/npm/dw/asyncapi-format.svg)</a>
-
 This `asyncapi-format` CLI is based on [openapi-format](https://github.com/thim81/openapi-format) as a separate
 package to allow customisation specific for AsyncAPI use-cases.
 
 ## Table of content
-
 * [Use-cases](#use-cases)
 * [Features](#features)
 * [Installation](#installation)
-    + [Local Installation (recommended)](#local-installation--recommended-)
+    + [Local Installation (recommended)](#local-installation-recommended)
     + [Global Installation](#global-installation)
     + [NPX usage](#npx-usage)
 * [Command Line Interface](#command-line-interface)
@@ -46,6 +48,7 @@ or for generating event producers/consumers.
 
 - [x] Order AsyncAPI fields in a default order
 - [x] Order AsyncAPI fields in a custom order
+- [x] Format the casing (camelCase,PascalCase, ...) of component elements
 - [x] Filter AsyncAPI files based on operations
 - [x] Filter AsyncAPI files based on flags
 - [x] Filter AsyncAPI files based on tags
@@ -56,7 +59,7 @@ or for generating event producers/consumers.
 - [x] Format via CLI
 - [x] Format via config files
 - [x] Use as a Module
-- [x] Support for AsyncAPI 2.0
+- [x] Support for AsyncAPI 2.0 / 2.1 / 2.2
 
 ## Installation
 
@@ -104,38 +107,44 @@ Arguments:
 
 Options:
 
-  -o, --output     Save the formated AsyncAPI file as JSON/YAML            [path]
+  --output, -o     Save the formated AsyncAPI file as JSON/YAML            [path]
   
   --sortFile       The file to specify custom AsyncAPI fields ordering     [path]
-  --filterFile     The file to specify filter setting                      [path]
+  --casingFile     The file to specify casing rules                        [path]
+  --filterFile     The file to specify filter rules                        [path]
     
-  --no-sort        Don't sort the file                                  [boolean]
+  --no-sort        Don't sort the AsyncAPI file                         [boolean]
+  
   --rename         Rename the AsyncAPI title                             [string]
 
-  --configFile     The file with all the format config options            [path]
+  --configFile     The file with the AsyncAPI-format CLI options            [path]
   
-  --json           Prints the file to stdout as JSON                   [boolean]
-  --yaml           Prints the file to stdout as YAML                   [boolean]
+  --lineWidth      Max line width of YAML output                         [number]
   
-  --help           Show help                                           [boolean]
-  --verbose        Output more details of the filter process             [count]
+  --json           Prints the file to stdout as JSON                    [boolean]
+  --yaml           Prints the file to stdout as YAML                    [boolean]
+  
+  --help           Show help                                            [boolean]
+  --verbose        Output more details of the filter process              [count]
 ```
 
 ## AsyncAPI format options
 
-| Parameter    | Alias         | Description                                                                 | Input type   | Default          | Required/Optional |
-|--------------|---------------|-----------------------------------------------------------------------------|--------------|------------------|-------------------|
-| file         |               | the original AsyncAPI file                                                  | path to file |                  | required          |
-| --output     | -o            | save the formatted AsyncAPI file as JSON/YAML                               | path to file |                  | optional          |
-| --sortFile   | -s            | the file to specify custom AsyncAPI fields ordering                         | path to file | defaultSort.json | optional          |
-| --filterFile | -f            | the file to specify filter setting                                          | path to file |                  | optional          |
-| --no-sort    |               | don't sort the file                                                         | boolean      | FALSE            | optional          |
-| --rename     |               | rename the AsyncAPI title                                                   | string       |                  | optional          |
-| --configFile | -c            | the file with all the format config options                                 | path to file |                  | optional          |
-| --json       |               | prints the file to stdout as JSON                                           |              | FALSE            | optional          |
-| --yaml       |               | prints the file to stdout as YAML                                           |              | FALSE            | optional          |
-| --verbose    | -v, -vv, -vvv | verbosity that can be increased, which will show more output of the process |              |                  | optional          |
-| --help       | h             | display help for command                                                    |              |                  | optional          |
+| Parameter    | Alias         | Description                                                                 | Input type   | Default          | Info      |
+|--------------|---------------|-----------------------------------------------------------------------------|--------------|------------------|-----------|
+| file         |               | the original AsyncAPI file                                                  | path to file |                  | required  |
+| --output     | -o            | save the formatted AsyncAPI file as JSON/YAML                               | path to file |                  | optional  |
+| --sortFile   | -s            | the file to specify custom AsyncAPI fields ordering                         | path to file | defaultSort.json | optional  |
+| --filterFile | -f            | the file to specify filter setting                                          | path to file |                  | optional  |
+| --casingFile | -c            | the file to specify casing setting                                          | path to file |                  | optional  |
+| --no-sort    |               | don't sort the AsyncAPI file                                                | boolean      | FALSE            | optional  |
+| --rename     |               | rename the AsyncAPI title                                                   | string       |                  | optional  |
+| --configFile | -c            | the file with all the format config options                                 | path to file |                  | optional  |
+| --lineWidth  |               | max line width of YAML output                                               | number       | -1 (Infinity)    | optional  |
+| --json       |               | prints the file to stdout as JSON                                           |              | FALSE            | optional  |
+| --yaml       |               | prints the file to stdout as YAML                                           |              | FALSE            | optional  |
+| --verbose    | -v, -vv, -vvv | verbosity that can be increased, which will show more output of the process |              |                  | optional  |
+| --help       | h             | display help for command                                                    |              |                  | optional  |
 
 ## AsyncAPI sort configuration options
 
@@ -163,13 +172,15 @@ example on how to do this).
 | schemas     | - description<br>\- type<br>\- items<br>\- properties<br>\- format<br>\- example<br>\- default                  |                                                                           |
 | properties  | - description<br>\- type<br>\- items<br>\- format<br>\- example<br>\- default<br>\- enum                        |                                                                           |
 
+Have a look at the folder [yaml-default](test/yaml-default) and compare the "output.yaml" (sorted document) with the "input.yaml" (original document), to see how asyncapi-format have sorted the AsyncAPI document.
+
 ## AsyncAPI filter options
 
 By specifying the desired filter values for the available filter types, the asyncapi-format CLI will strip out any
 matching item from the AsyncAPI document. You can combine multiple types to filter out a range of AsyncAPI items.
 
-For more complex use-cases, we can advise the excellent https://github.com/Mermade/openapi-filter package, which has
-really extended options for filtering AsyncAPI documents.
+For more complex use-cases, we can advise the excellent https://github.com/Mermade/openapi-filter package, which has 
+extended options for filtering AsyncAPI documents.
 
 | Type         | Description                    | Type  | Examples                         |
 |--------------|--------------------------------|-------|----------------------------------|
@@ -180,7 +191,9 @@ really extended options for filtering AsyncAPI documents.
 
 Some more details on the available filter types:
 
-- **operations**: Refers to the "Channel Item Object" https://www.asyncapi.com/docs/specifications/2.0.0#channelsObject
+### Filter - operations
+
+=> **operations**: Refers to the "Channel Item Object" https://www.asyncapi.com/docs/specifications/2.0.0#channelsObject
 
 This will remove all fields and attached fields that match the verbs. In the example below, this would mean that
 all `publish`, `subscribe` items would be removed from the AsyncAPI document.
@@ -201,9 +214,11 @@ channels:
                 - $ref: '#/components/operationTraits/kafka'
             message:
                 $ref: '#/components/messages/turnOnOff'
-```  
+```
 
-- **tags**: Refers to the "tags" field from the "Operation
+### Filter - tags
+
+=> **tags**: Refers to the "tags" field from the "Operation
   Object" https://www.asyncapi.com/docs/specifications/2.0.0#operationObject
 
 This will remove all fields and attached fields that match the tags. In the example below, this would mean that all
@@ -235,9 +250,11 @@ components:
             tags:
                 - measure
 
-```  
+```
 
-- **operationIds**: Refers to the "operationId" field from the "Operation
+### Filter - operationIds
+
+=> **operationIds**: Refers to the "operationId" field from the "Operation
   Object" https://www.asyncapi.com/docs/specifications/2.0.0#operationObject
 
 This will remove specific fields and attached fields that match the operation ID's. In the example below, this would
@@ -256,7 +273,9 @@ channels:
             operationId: turnOn
 ```
 
-- **flags**: Refers to a custom property which can be set on any field in the AsyncAPI document.
+### Filter - flags
+
+=> **flags**: Refers to a custom property that can be set on any field in the AsyncAPI document.
 
 This will remove all fields and attached fields that match the flags. In the example below, this would mean that all
 items with the flag `x-exclude` would be removed from the AsyncAPI document.
@@ -274,6 +293,111 @@ channels:
         x-exclude: true
         subscribe:
             operationId: turnOn
+```
+## AsyncAPI formatting configuration options
+
+The asyncapi-format CLI formatting option can assist with keeping the field names consistent by automatically changing the casing of the properties/keys/names for the different elements in the AsyncAPI document.
+The desired casing can be defined per AsyncAPI key/element (see list below).
+The keys that are not specified will keep their casing like it is in the original AsyncAPI document, so only for defined fields, the casing will be changed.
+
+| Key                        | Description                                                                               | AsyncAPI reference                                                         |
+| -------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| channels                   | Changes key/name of the channels                                                          | [channels-object](https://www.asyncapi.com/docs/specifications/v2.2.0#channelsObject)|
+| operationId                | Changes operation ID's that are part of the Operations Object                             | [operation-object](https://www.asyncapi.com/docs/specifications/v2.2.0#operationObject)|
+| properties                 | Changes property keys of the schemas of the inline messages, payload & components         | [schemaObject](https://www.asyncapi.com/docs/specifications/v2.2.0#schemaObject) |
+| componentsSchemas          | Changes the key of the schema models in the components sections & "$ref" links            | [components-object](https://www.asyncapi.com/docs/specifications/v2.2.0#componentsObject) |
+| componentsMessages         | Changes the key of the messages models in the components sections & "$ref" links          | [components-object](https://www.asyncapi.com/docs/specifications/v2.2.0#componentsObject) |
+| componentsParameters       | Changes the key of the parameters models in the components sections & "$ref" links        | [components-object](https://www.asyncapi.com/docs/specifications/v2.2.0#componentsObject) |
+| componentsMessageTraits    | Changes the key of the message traits models in the components sections & "$ref" links    | [components-object](https://www.asyncapi.com/docs/specifications/v2.2.0#componentsObject) |
+| componentsOperationTraits  | Changes the key of the operation traits models in the components sections & "$ref" links  | [components-object](https://www.asyncapi.com/docs/specifications/v2.2.0#componentsObject) |
+| componentsSecuritySchemes  | Changes the key of the security schemes in the components sections & "$ref" links         | [components-object](https://www.asyncapi.com/docs/specifications/v2.2.0#componentsObject) |
+
+### Casing options
+
+| Casing type      | Casing alias | Description                                       | Example           |
+| -----------------| ------------ | ------------------------------------------------- | ----------------- |
+| 🐪 camelCase     | camelCase    | converts a strings to `camelCase`                 | `asyncapiFormat`  |
+| 👨‍🏫 PascalCase    | PascalCase   | converts a strings to `PascalCase`                | `AsyncapiFormat`  |
+| 🥙 kebab-case    | kebabCase    | converts a strings to `kebab-case`                | `asyncapi-format` |
+| 🚂 Train-Case    | TrainCase    | converts a strings to `Train-Case`                | `Asyncapi-Format` |
+| 🐍 snake_case    | snakeCase    | converts a strings to `snake_case`                | `asyncapi_format` |
+| 🕊 Ada_Case      | AdaCase      | converts a strings to `Ada_Case`                  | `Asyncapi_Format` |
+| 📣 CONSTANT_CASE | constantCase | converts a strings to `CONSTANT_CASE`             | `ASYNCAPI_FORMAT` |
+| 👔 COBOL-CASE    | cobolCase    | converts a strings to `COBOL-CASE`                | `ASYNCAPI-FORMAT` |
+| 📍 Dot.notation  | dotNotation  | converts a strings to `Dot.notation`              | `asyncapi.format` |
+| 🛰 Space case    | spaceCase    | converts a strings to `Space case` (with spaces)  | `asyncapi format` |
+| 🏛 Capital Case  | capitalCase  | converts a strings to `Capital Case` (with spaces)| `Asyncapi Format` |
+| 🔡 lower case    | lowerCase    | converts a strings to `lower case` (with spaces)  | `asyncapi format` |
+| 🔠 UPPER CASE    | upperCase    | converts a strings to `UPPER CASE` (with spaces)  | `ASYNCAPI FORMAT` |
+
+> REMARK: All special characters are stripped during conversion, except for the `@` and `$`.
+
+The casing options are provided by the nano NPM [case-anything](https://github.com/mesqueeb/case-anything) package.
+
+### Format casing - channel
+
+=> **channels**: Refers to the `channels` elements in the AsyncAPI document.
+
+Formatting casing example:
+
+```yaml
+operationId: kebab-case
+```
+
+Example before:
+
+```yaml
+```
+
+asyncapi-format will format the "getPets" from the original camelcase to kebab-case.
+
+Example after:
+
+```yaml
+```
+
+### Format casing - operationId
+
+=> **operationId**: Refers to the `operationId` properties in the AsyncAPI document.
+
+Formatting casing example:
+
+```yaml
+operationId: kebab-case
+```
+
+Example before:
+
+```yaml
+```
+
+asyncapi-format will format the "getPets" from the original camelcase to kebab-case.
+
+Example after:
+
+```yaml
+```
+
+### Format casing - model & schema properties
+
+=> **properties**: Refers to all the schema properties, that are defined inline in the paths request bodies & responses and the models in the components section of the AsyncAPI document.
+
+Formatting casing example:
+
+```yaml
+properties: snake_case
+```
+
+Example before:
+
+```yaml
+```
+
+The CLI will format all the properties like: "id", "username", "firstName" from the original camelcase to snake_case.
+
+Example after:
+
+```yaml
 ```
 
 ## CLI sort usage

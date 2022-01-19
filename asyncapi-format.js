@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const traverse = require('traverse');
-const {isString} = require("./util-types");
+const {isString, isObject, isArray} = require("./util-types");
 const {
   adaCase,
   camelCase,
@@ -247,11 +247,6 @@ function asyncapiChangeCase(asObj, options) {
 
   let debugCasingStep = '' // uncomment // debugFilterStep below to see which sort part is triggered
 
-  // Initiate components tracking
-  const comps = {
-    parameters: {},
-  }
-
   // Recursive traverse through OpenAPI document to update components
   traverse(jsonObj).forEach(function (node) {
     // Focus only on the components
@@ -261,68 +256,25 @@ function asyncapiChangeCase(asObj, options) {
         // debugCasingStep = 'Casing - components/schemas - names
         this.update(changeObjKeysCase(node, casingSet.componentsSchemas));
       }
-      // Change components/examples - names
-      if (this.path[1] === 'examples' && this.path.length === 2 && casingSet.componentsExamples) {
-        // debugCasingStep = 'Casing - components/examples - names
-        this.update(changeObjKeysCase(node, casingSet.componentsExamples));
+      // Change components/messages - names
+      if (this.path[1] === 'messages' && this.path.length === 2 && casingSet.componentsMessages) {
+        // debugCasingStep = 'Casing - components/messages - names
+        this.update(changeObjKeysCase(node, casingSet.componentsMessages));
       }
-      // Change components/headers - names
-      if (this.path[1] === 'headers' && this.path.length === 2 && casingSet.componentsHeaders) {
-        // debugCasingStep = 'Casing - components/headers - names
-        this.update(changeObjKeysCase(node, casingSet.componentsHeaders));
+      // Change components/messageTraits - names
+      if (this.path[1] === 'messageTraits' && this.path.length === 2 && casingSet.componentsMessageTraits) {
+        // debugCasingStep = 'Casing - components/messageTraits - names
+        this.update(changeObjKeysCase(node, casingSet.componentsMessageTraits));
       }
-      // Change components/parameters - in:query/in:headers/in:path - key
-      if (this.path[1] === 'parameters' && this.path.length === 2 && casingSet.componentsParametersHeader) {
-        const orgObj = JSON.parse(JSON.stringify(node));
-        let replacedItems = Object.keys(orgObj).map((key) => {
-          if (orgObj[key].in && orgObj[key].in === 'query' && casingSet.componentsParametersQuery) {
-            debugCasingStep = 'Casing - components/parameters - in:query - key'
-            const newKey = changeCase(key, casingSet.componentsParametersQuery);
-            comps.parameters[key] = newKey
-            return {[newKey]: orgObj[key]};
-          }
-          if (orgObj[key].in && orgObj[key].in === 'path' && casingSet.componentsParametersPath) {
-            debugCasingStep = 'Casing - components/parameters - in:path - key'
-            const newKey = changeCase(key, casingSet.componentsParametersPath);
-            comps.parameters[key] = newKey
-            return {[newKey]: orgObj[key]};
-          }
-          if (orgObj[key].in && orgObj[key].in === 'header' && casingSet.componentsParametersHeader) {
-            debugCasingStep = 'Casing - components/parameters - in:header - key'
-            const newKey = changeCase(key, casingSet.componentsParametersHeader);
-            comps.parameters[key] = newKey
-            return {[newKey]: orgObj[key]};
-          }
-        });
-        this.update(Object.assign({}, ...replacedItems));
+      // Change components/operationTraits - names
+      if (this.path[1] === 'operationTraits' && this.path.length === 2 && casingSet.componentsOperationTraits) {
+        // debugCasingStep = 'Casing - components/operationTraits - names
+        this.update(changeObjKeysCase(node, casingSet.componentsOperationTraits));
       }
-      // Change components/parameters - query/header name
-      if (this.path[1] === 'parameters' && this.path.length === 3) {
-        if (node.in && node.in === 'query' && node.name && casingSet.parametersQuery) {
-          debugCasingStep = 'Casing - path > parameters/query - name'
-          node.name = changeCase(node.name, casingSet.parametersQuery);
-          this.update(node);
-        }
-        if (node.in && node.in === 'header' && node.name && casingSet.parametersHeader) {
-          debugCasingStep = 'Casing - path > parameters/headers - name'
-          node.name = changeCase(node.name, casingSet.parametersHeader);
-          this.update(node);
-        }
-        if (node.in && node.in === 'path' && node.name && casingSet.parametersPath) {
-          debugCasingStep = 'Casing - path > parameters/path - name'
-          node.name = changeCase(node.name, casingSet.parametersPath);
-          this.update(node);
-        }
-      }
-      // Change components/responses - names
-      if (this.path[1] === 'responses' && this.path.length === 2 && casingSet.componentsResponses) {
-        // debugCasingStep = 'Casing - components/responses - names
-        this.update(changeObjKeysCase(node, casingSet.componentsResponses));
-      }
-      // Change components/requestBodies - names
-      if (this.path[1] === 'requestBodies' && this.path.length === 2 && casingSet.componentsRequestBodies) {
-        // debugCasingStep = 'Casing - components/requestBodies - names
-        this.update(changeObjKeysCase(node, casingSet.componentsRequestBodies));
+      // Change components/parameters - names
+      if (this.path[1] === 'parameters' && this.path.length === 2 && casingSet.componentsParameters) {
+        // debugCasingStep = 'Casing - components/parameters - names
+        this.update(changeObjKeysCase(node, casingSet.componentsParameters));
       }
       // Change components/securitySchemes - names
       if (this.path[1] === 'securitySchemes' && this.path.length === 2 && casingSet.componentsSecuritySchemes) {
@@ -332,7 +284,7 @@ function asyncapiChangeCase(asObj, options) {
     }
   });
 
-  // Recursive traverse through AsyncAPI document to non-components
+  // Recursive traverse through AsyncAPI document for non-components
   traverse(jsonObj).forEach(function (node) {
     // Change components $ref names
     if (this.key === '$ref') {
@@ -340,27 +292,21 @@ function asyncapiChangeCase(asObj, options) {
         const compName = node.replace('#/components/schemas/', '');
         this.update(`#/components/schemas/${changeCase(compName, casingSet.componentsSchemas)}`);
       }
-      if (node.startsWith('#/components/examples/') && casingSet.componentsExamples) {
-        const compName = node.replace('#/components/examples/', '');
-        this.update(`#/components/examples/${changeCase(compName, casingSet.componentsExamples)}`);
+      if (node.startsWith('#/components/messages/') && casingSet.componentsMessages) {
+        const compName = node.replace('#/components/messages/', '');
+        this.update(`#/components/messages/${changeCase(compName, casingSet.componentsMessages)}`);
       }
-      if (node.startsWith('#/components/responses/') && casingSet.componentsResponses) {
-        const compName = node.replace('#/components/responses/', '');
-        this.update(`#/components/responses/${changeCase(compName, casingSet.componentsResponses)}`);
+      if (node.startsWith('#/components/messageTraits/') && casingSet.componentsMessageTraits) {
+        const compName = node.replace('#/components/messageTraits/', '');
+        this.update(`#/components/messageTraits/${changeCase(compName, casingSet.componentsMessageTraits)}`);
       }
-      if (node.startsWith('#/components/parameters/')) {
+      if (node.startsWith('#/components/operationTraits/') && casingSet.componentsOperationTraits) {
+        const compName = node.replace('#/components/operationTraits/', '');
+        this.update(`#/components/operationTraits/${changeCase(compName, casingSet.componentsOperationTraits)}`);
+      }
+      if (node.startsWith('#/components/parameters/') && casingSet.componentsParameters) {
         const compName = node.replace('#/components/parameters/', '');
-        if (comps.parameters[compName]) {
-          this.update(`#/components/parameters/${comps.parameters[compName]}`);
-        }
-      }
-      if (node.startsWith('#/components/headers/') && casingSet.componentsHeaders) {
-        const compName = node.replace('#/components/headers/', '');
-        this.update(`#/components/headers/${changeCase(compName, casingSet.componentsHeaders)}`);
-      }
-      if (node.startsWith('#/components/requestBodies/') && casingSet.componentsRequestBodies) {
-        const compName = node.replace('#/components/requestBodies/', '');
-        this.update(`#/components/requestBodies/${changeCase(compName, casingSet.componentsRequestBodies)}`);
+        this.update(`#/components/parameters/${changeCase(compName, casingSet.componentsParameters)}`);
       }
       if (node.startsWith('#/components/securitySchemes/') && casingSet.componentsSecuritySchemes) {
         const compName = node.replace('#/components/securitySchemes/', '');
@@ -369,9 +315,14 @@ function asyncapiChangeCase(asObj, options) {
     }
 
     // Change operationId
-    if (this.key === 'operationId' && casingSet.operationId && this.path[0] === 'paths' && this.path.length === 4) {
+    if (this.key === 'operationId' && casingSet.operationId && this.path[0] === 'channels' && this.path.length === 4) {
       // debugCasingStep = 'Casing - Single field - OperationId'
       this.update(changeCase(node, casingSet.operationId));
+    }
+    // Change channels - channel key
+    if (this.key === 'channels' && casingSet.channels && this.path[0] === 'channels') {
+      // debugCasingStep = 'Casing -Channels - channel key'
+      this.update(changeObjKeysCase(node, casingSet.channels));
     }
     // Change summary
     if (this.key === 'summary' && casingSet.summary) {
@@ -383,54 +334,44 @@ function asyncapiChangeCase(asObj, options) {
       // debugCasingStep = 'Casing - Single field - description'
       this.update(changeCase(node, casingSet.description));
     }
-    // Change paths > examples - name
-    if (this.path[0] === 'paths' && this.key === 'examples' && casingSet.componentsExamples) {
-      // debugCasingStep = 'Casing - Single field - examples name'
-      this.update(changeObjKeysCase(node, casingSet.componentsExamples));
+    // Change channels > parameters - name
+    if (this.path[0] === 'channels' && this.key === 'parameters' && casingSet.componentsParameters) {
+      // debugCasingStep = 'Casing - Single field - parameters name'
+      this.update(changeObjKeysCase(node, casingSet.componentsParameters));
     }
-    // Change components/schema - properties
+    // Change components/schemas - properties
     if (this.path[1] === 'schemas' && this.key === 'properties' && casingSet.properties
       && (this.parent && this.parent.key !== 'properties' && this.parent.key !== 'value')
     ) {
-      // debugCasingStep = 'Casing - components/schema - properties name'
+      // debugCasingStep = 'Casing - components/schemas - properties name'
       this.update(changeObjKeysCase(node, casingSet.properties));
     }
-    // Change paths > schema - properties
-    if (this.path[0] === 'paths' && this.key === 'properties' && casingSet.properties
+    // Change components/messages - properties
+    if (this.path[1] === 'messages' && this.key === 'properties' && casingSet.properties
       && (this.parent && this.parent.key !== 'properties' && this.parent.key !== 'value')
     ) {
-      // debugCasingStep = 'Casing - paths>schema - properties name'
+      // debugCasingStep = 'Casing - components/messages - properties name'
       this.update(changeObjKeysCase(node, casingSet.properties));
     }
-    // Change security - keys
-    if (this.path[0] === 'paths' && this.key === 'security' && isArray(node) && casingSet.componentsSecuritySchemes) {
-      // debugCasingStep = 'Casing - path > - security'
+    // Change components/messageTraits - properties
+    if (this.path[1] === 'messageTraits' && this.key === 'properties' && casingSet.properties
+      && (this.parent && this.parent.key !== 'properties' && this.parent.key !== 'value')
+    ) {
+      // debugCasingStep = 'Casing - components/messages - properties name'
+      this.update(changeObjKeysCase(node, casingSet.properties));
+    }
+    // Change channels > message - properties
+    if (this.path[0] === 'channels' && this.key === 'properties' && casingSet.properties
+      && (this.parent && this.parent.key !== 'properties' && this.parent.key !== 'value')
+    ) {
+      // debugCasingStep = 'Casing - channels > message - properties name'
+      this.update(changeObjKeysCase(node, casingSet.properties));
+    }
+    // Change servers > - security - keys
+    if (this.path[0] === 'servers' && this.key === 'security' && isArray(node) && casingSet.componentsSecuritySchemes) {
+      // debugCasingStep = 'Casing - servers > - security'
       this.update(changeArrayObjKeysCase(node, casingSet.componentsSecuritySchemes))
     }
-    // Change parameters - name
-    if (this.path[0] === 'paths' && this.key === 'parameters'
-      && (casingSet.parametersQuery || casingSet.parametersHeader || casingSet.parametersPath)) {
-      // debugCasingStep = 'Casing - components > parameters - name'
-
-      // Loop over parameters array
-      let params = JSON.parse(JSON.stringify(node)); // Deep copy of the schema object
-      for (let i = 0; i < params.length; i++) {
-        if (params[i].in && params[i].in === 'query' && params[i].name && casingSet.parametersQuery) {
-          // debugCasingStep = 'Casing - path > parameters/query- name'
-          params[i].name = changeCase(params[i].name, casingSet.parametersQuery)
-        }
-        if (params[i].in && params[i].in === 'header' && params[i].name && casingSet.parametersHeader) {
-          // debugCasingStep = 'Casing - path > parameters/headers - name'
-          params[i].name = changeCase(params[i].name, casingSet.parametersHeader)
-        }
-        if (params[i].in && params[i].in === 'path' && params[i].name && casingSet.parametersPath) {
-          // debugCasingStep = 'Casing - path > parameters/path - name'
-          params[i].name = changeCase(params[i].name, casingSet.parametersPath)
-        }
-      }
-      this.update(params);
-    }
-
   });
 
   // Return result object

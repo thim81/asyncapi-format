@@ -1,0 +1,6 @@
+componentsSchemas: snake_case
+componentsMessages: snake_case
+componentsMessageTraits: kebab-case
+componentsParameters: kebab-case
+componentsOperationTraits: kebab-case
+componentsSecuritySchemes: snake_case
