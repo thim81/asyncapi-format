@@ -2,30 +2,34 @@
 
 const fs = require('fs');
 const path = require('path');
-const assert = require('assert');
 const jy = require('js-yaml');
 
 const asyncapiFormat = require('../asyncapi-format.js');
 
+let destroyOutput = false;
 const tests = fs.readdirSync(__dirname).filter(file => {
-  return fs.statSync(path.join(__dirname, file)).isDirectory() && (!file.startsWith('_') || doPrivate);
+  return fs.statSync(path.join(__dirname, file)).isDirectory() && (!file.startsWith('_'));
 });
 
 // SELECTIVE TESTING DEBUG
-// const tests = ['yaml-no-sort']
-// console.log('tests',tests);
+// const tests = ['yaml-filter-custom']
+// destroyOutput = true
 
 describe('asyncapi-format tests', () => {
   tests.forEach((test) => {
     describe(test, () => {
-      it('should match expected output', (done) => {
+      it('should match expected output', async () => {
         let options = {};
         let configFile = null;
         let configFileOptions = {};
         let sortOptions = {sortSet: {}};
+        let sortComponentsOptions = {sortComponentsSet: {}};
         let sortFile = null;
         let filterFile = null;
-        let filterOptions = {filterSet: {}}
+        let casingFile = null;
+        let sortComponentsFile = null;
+        let filterOptions = {filterSet: {}};
+        let casingOptions = {casingSet: {}};
         let inputFilename = null;
         let input = null;
 
@@ -33,7 +37,7 @@ describe('asyncapi-format tests', () => {
           // Load options.yaml
           configFile = path.join(__dirname, test, 'options.yaml');
           configFileOptions = jy.load(fs.readFileSync(configFile, 'utf8'));
-          configFileOptions.sort = !(configFileOptions['no-sort'])
+          configFileOptions.sort = !(configFileOptions['no-sort']);
           options = Object.assign({}, options, configFileOptions);
         } catch (ex) {
           // console.error('ERROR Load options.yaml', ex)
@@ -42,7 +46,7 @@ describe('asyncapi-format tests', () => {
             configFile = path.join(__dirname, test, 'options.json');
             configFileOptions = JSON.parse(fs.readFileSync(configFile, 'utf8'));
             if (configFileOptions['no-sort'] && configFileOptions['no-sort'] === true) {
-              configFileOptions.sort = !(configFileOptions['no-sort'])
+              configFileOptions.sort = !(configFileOptions['no-sort']);
               delete configFileOptions['no-sort'];
             }
             options = Object.assign({}, options, configFileOptions);
@@ -67,7 +71,7 @@ describe('asyncapi-format tests', () => {
           } catch (ex) {
             // No options found. defaultSort.json will be used
             // console.error('ERROR Load customSort.json', ex)
-            options.sortSet = require('../defaultSort.json')
+            options.sortSet = require('../defaultSort.json');
           }
         }
 
@@ -77,7 +81,7 @@ describe('asyncapi-format tests', () => {
           filterOptions.filterSet = jy.load(fs.readFileSync(filterFile, 'utf8'));
           options = Object.assign({}, options, filterOptions);
         } catch (ex) {
-          // console.error('ERROR Load customSort.yaml', ex)
+          // console.error('ERROR Load customFilter.yaml', ex)
           try {
             // Fallback to customFilter.json
             filterFile = path.join(__dirname, test, 'customFilter.json');
@@ -86,9 +90,48 @@ describe('asyncapi-format tests', () => {
           } catch (ex) {
             // No options found. defaultSort.json will be used
             // console.error('ERROR Load customSort.json', ex)
-            options.filterSet = require('../defaultFilter.json')
+            options.filterSet = require('../defaultFilter.json');
           }
         }
+
+        try {
+          // Load customCasing.yaml
+          casingFile = path.join(__dirname, test, 'customCasing.yaml');
+          // filterOptions.filterSet = jy.load(fs.readFileSync(filterFile, 'utf8'));
+          casingOptions.casingSet = jy.load(fs.readFileSync(casingFile, 'utf8'));
+          options = Object.assign({}, options, casingOptions);
+        } catch (ex) {
+          // console.error('ERROR Load customCasing.yaml', ex)
+          try {
+            // Fallback to customCasing.json
+            casingFile = path.join(__dirname, test, 'customCasing.json');
+            // filterOptions.filterSet = jy.load(fs.readFileSync(filterFile, 'utf8'));
+            casingOptions.casingSet = jy.load(fs.readFileSync(casingFile, 'utf8'));
+            options = Object.assign({}, options, casingOptions);
+          } catch (ex) {
+            // No options found
+          }
+        }
+
+        // try {
+        //   // Load customSortComponents.yaml
+        //   sortComponentsFile = path.join(__dirname, test, 'customSortComponents.yaml');
+        //   // sortOptions.sortSet = jy.load(fs.readFileSync(sortFile, 'utf8'));
+        //   sortComponentsOptions.sortComponentsSet = jy.load(fs.readFileSync(sortComponentsFile, 'utf8'));
+        //   options = Object.assign({}, options, sortComponentsOptions);
+        // } catch (ex) {
+        //   // console.error('ERROR Load customSort.yaml', ex)
+        //   try {
+        //     // Fallback to customSort.json
+        //     sortComponentsFile = path.join(__dirname, test, 'customSortComponents.json');
+        //     sortComponentsOptions.sortComponentsSet = JSON.parse(fs.readFileSync(sortComponentsFile, 'utf8'));
+        //     options = Object.assign({}, options, sortComponentsOptions);
+        //   } catch (ex) {
+        //     // No options found. defaultSort.json will be used
+        //     // console.error('ERROR Load customSort.json', ex)
+        //     options.sortComponentsOptions = require('../defaultSortComponents.json');
+        //   }
+        // }
 
         try {
           // Load input.yaml
@@ -109,12 +152,25 @@ describe('asyncapi-format tests', () => {
         const outputFilename = path.join(__dirname, test, options.output);
         let readOutput = false;
         let output = {};
+
+        // Destroy existing output, to force update test
+        if (destroyOutput) {
+          try {
+            fs.unlinkSync(outputFilename);
+          } catch (e) {
+            // console.error('ERROR delete output.yaml', ex)
+          }
+        }
+
         try {
           output = jy.load(fs.readFileSync(outputFilename, 'utf8'));
           readOutput = true;
         } catch (ex) {
           // No options found. output = {} will be used
         }
+
+        // Initialize data
+        // let result = input;
 
         let result = asyncapiFormat.asyncapiSort(input, options);
         if (options.filterSet) {
@@ -126,17 +182,21 @@ describe('asyncapi-format tests', () => {
           result = asyncapiFormat.asyncapiRename(result, options);
         }
 
-        if (!readOutput) {
-          if ((options.output && options.output.indexOf('.json') >= 0) || options.json) {
-            output = JSON.stringify(result, null, 2);
-          } else {
-            output = jy.dump(result);
+        try {
+          if (!readOutput) {
+            if ((options.output && options.output.indexOf('.json') >= 0) || options.json) {
+              output = JSON.stringify(result, null, 2);
+            } else {
+              output = jy.dump(result);
+            }
+            fs.writeFileSync(outputFilename, output, 'utf8');
           }
-          fs.writeFileSync(outputFilename, output, 'utf8');
+        } catch (error) {
+          console.log('error', error);
         }
 
-        assert.deepStrictEqual(result, output);
-        return done();
+        // Assert results with output
+        expect(result).toStrictEqual(output);
       });
     });
   });
