@@ -1,4 +1,3 @@
-# asyncapi-format
 ![asyncapi-format icon](./assets/asyncapi-format-logo.svg)
 
 <a href="https://www.npmjs.com/package/asyncapi-format" alt="Latest Stable Version">![npm](https://img.shields.io/npm/v/asyncapi-format.svg)</a>
