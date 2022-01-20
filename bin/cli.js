@@ -197,7 +197,7 @@ async function run(asFile, options) {
     keys.map((comp) => {
       if (unusedComp && unusedComp[comp] && unusedComp[comp].length > 0) {
         unusedComp[comp].forEach(value => {
-          const spacer = (comp === 'requestBodies' ? `\t` : `\t\t`);
+          const spacer = (comp === 'messageTraits' || comp === 'operationTraits' ? `\t` : `\t\t`);
           cliOut.push(`- components/${comp}${spacer} "${value}"`);
           count++;
         });

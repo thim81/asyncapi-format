@@ -12,7 +12,7 @@ const tests = fs.readdirSync(__dirname).filter(file => {
 });
 
 // SELECTIVE TESTING DEBUG
-// const tests = ['yaml-filter-custom']
+// const tests = ['yaml-filter-unused-components']
 // destroyOutput = true
 
 describe('asyncapi-format tests', () => {
