@@ -41,7 +41,7 @@ compare changes. By sorting & formatting from time to time, the fields are all o
 to maintain the file with greater ease.
 
 The filtering is a handy add-on to remove specific elements from the AsyncAPI like internal endpoints, beta tags, ...
-This can be useful in CI/CD pipelines, where the AsyncAPI is used as source for other documents like Web documentation
+This can be useful in CI/CD pipelines, where the AsyncAPI is used as the source for other documents like Web documentation
 or for generating event producers/consumers.
 
 ## Features
@@ -63,7 +63,7 @@ or for generating event producers/consumers.
 - [x] Format via CLI
 - [x] Format via config files
 - [x] Use as a Module
-- [x] Support for AsyncAPI 2.0 / 2.1 / 2.2
+- [x] Support for AsyncAPI 2.x
 
 ## Installation
 
@@ -464,26 +464,36 @@ The keys that are not specified will keep their casing like it is in the origina
 
 The casing options are provided by the nano NPM [case-anything](https://github.com/mesqueeb/case-anything) package.
 
-### Format casing - channel
+### Format casing - channels
 
 => **channels**: Refers to the `channels` elements in the AsyncAPI document.
 
 Formatting casing example:
 
 ```yaml
-operationId: kebab-case
+channels: snake_case
 ```
 
 Example before:
 
 ```yaml
+channels:
+  smartylighting.streetlights.lighting.measured:
+    description: The topic on which measured values may be produced and consumed.
+    subscribe:
+      operationId: measuredStreetlight
 ```
 
-asyncapi-format will format the "getPets" from the original camelcase to kebab-case.
+asyncapi-format will format the "measuredStreetlight" from the original dot.notation to snake_case.
 
 Example after:
 
 ```yaml
+channels:
+  smartylighting_streetlights_lighting_measured:
+    description: The topic on which measured values may be produced and consumed.
+    subscribe:
+        operationId: measuredStreetlight
 ```
 
 ### Format casing - operationId
@@ -499,18 +509,27 @@ operationId: kebab-case
 Example before:
 
 ```yaml
+channels:
+  smartylighting.streetlights.lighting.measured:
+    description: The topic on which measured values may be produced and consumed.
+    subscribe:
+      operationId: measuredStreetlight
 ```
 
-asyncapi-format will format the "getPets" from the original camelcase to kebab-case.
+asyncapi-format will format the "measuredStreetlight" from the original camelcase to kebab-case.
 
 Example after:
 
 ```yaml
+channels:
+  smartylighting.streetlights.lighting.measured:
+    description: The topic on which measured values may be produced and consumed.
+    subscribe:
+      operationId: measured-streetlight
 ```
-
 ### Format casing - model & schema properties
 
-=> **properties**: Refers to all the schema properties, that are defined inline in the paths request bodies & responses and the models in the components section of the AsyncAPI document.
+=> **properties**: Refers to all the schema properties, that are defined inline in the channels and the models in the components section of the AsyncAPI document.
 
 Formatting casing example:
 
@@ -521,13 +540,91 @@ properties: snake_case
 Example before:
 
 ```yaml
+components:
+  schemas:
+    lightMeasuredPayload:
+      type: object
+      properties:
+        lumensIntensity:
+          type: integer
+          minimum: 0
+          description: Light intensity measured in lumens.
+        sentAt:
+          $ref: '#/components/schemas/sentAt'
 ```
 
-The CLI will format all the properties like: "id", "username", "firstName" from the original camelcase to snake_case.
+The CLI will format all the properties like: "lumens", "sentAt" from the original camelcase to snake_case.
 
 Example after:
 
 ```yaml
+components:
+  schemas:
+    lightMeasuredPayload:
+      type: object
+      properties:
+          lumens_intensity:
+          type: integer
+          minimum: 0
+          description: Light intensity measured in lumens.
+        sent_at:
+          $ref: '#/components/schemas/sentAt'
+```
+
+### Format casing - component keys
+
+=> **componentsSchemas / componentsMessages / componentsParameters / componentsMessageTraits / componentsOperationTraits / componentsSecuritySchemes**: Refers to all the model objects that are defined in the components section of the AsyncAPI document.
+
+Formatting casing example:
+
+```yaml
+componentsSchemas: PascalCase
+```
+
+Example before:
+
+```yaml
+channels:
+  smartylighting.streetlights.lighting.measured:
+    description: The topic on which measured values may be produced and consumed.
+    subscribe:
+      message:
+        $ref: '#/components/messages/turnOnOff'
+components:
+  messages:
+    lightMeasured:
+      name: lightMeasured
+      title: Light measured
+    turnOnOff:
+      name: turnOnOff
+      title: Turn on/off
+    dimLight:
+        name: dimLight
+        title: Dim light
+```
+
+asyncapi-format will format all the component keys like: "lightMeasured", "turnOnOff", "dimLight" to PascalCase, including formatting all the "$ref" used in the AsyncAPI document.
+
+Example after:
+
+```yaml
+channels:
+  smartylighting.streetlights.lighting.measured:
+    description: The topic on which measured values may be produced and consumed.
+    subscribe:
+      message:
+        $ref: '#/components/messages/TurnOnOff'
+components:
+  messages:
+    LightMeasured:
+      name: lightMeasured
+      title: Light measured
+    TurnOnOff:
+      name: turnOnOff
+      title: Turn on/off
+    DimLight:
+        name: dimLight
+        title: Dim light
 ```
 
 ## CLI sort usage
