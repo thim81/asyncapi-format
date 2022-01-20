@@ -12,7 +12,7 @@ const tests = fs.readdirSync(__dirname).filter(file => {
 });
 
 // SELECTIVE TESTING DEBUG
-// const tests = ['yaml-sort-components']
+// const tests = ['yaml-filter-unused-components']
 // destroyOutput = true
 
 describe('asyncapi-format tests', () => {
@@ -171,25 +171,25 @@ describe('asyncapi-format tests', () => {
 
         // Filter AsyncAPI document
         if (options.filterSet) {
-          const resFilter = asyncapiFormat.asyncapiFilter(result, options);
+          const resFilter = await asyncapiFormat.asyncapiFilter(result, options);
           if (resFilter.data) result = resFilter.data;
         }
 
         // Sort AsyncAPI document
         if (options.sort === true) {
-          const resFormat = asyncapiFormat.asyncapiSort(result, options);
+          const resFormat = await asyncapiFormat.asyncapiSort(result, options);
           if (resFormat.data) result = resFormat.data;
         }
 
         // Change case AsyncAPI document
         if (options.casingSet) {
-          const resFormat = asyncapiFormat.asyncapiChangeCase(result, options);
+          const resFormat = await asyncapiFormat.asyncapiChangeCase(result, options);
           if (resFormat.data) result = resFormat.data;
         }
 
         // Rename title AsyncAPI document
         if (options.rename) {
-          const resRename = asyncapiFormat.asyncapiRename(result, options);
+          const resRename = await asyncapiFormat.asyncapiRename(result, options);
           if (resRename.data) result = resRename.data;
         }
 

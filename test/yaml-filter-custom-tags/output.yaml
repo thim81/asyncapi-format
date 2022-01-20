@@ -16,8 +16,6 @@ info:
 tags:
   - name: command
     description: Light commands
-  - name: measure
-    description: Measurement data
 servers:
   production:
     url: test.mosquitto.org:{port}

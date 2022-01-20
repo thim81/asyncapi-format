@@ -31,15 +31,13 @@ servers:
           - '1883'
           - '8883'
     security:
-      - apiKey: [ ]
+      - apiKey: []
       - supportedOauthFlows:
           - streetlights:on
           - streetlights:off
           - streetlights:dim
-      - openIdConnectWellKnown: [ ]
-
+      - openIdConnectWellKnown: []
 defaultContentType: application/json
-
 channels:
   smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured:
     description: The topic on which measured values may be produced and consumed.
@@ -53,7 +51,6 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/lightMeasured'
-
   smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
     parameters:
       streetlightId:
@@ -64,7 +61,6 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/turnOnOff'
-
   smartylighting.streetlights.1.0.action.{streetlightId}.turn.off:
     parameters:
       streetlightId:
@@ -75,7 +71,6 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/turnOnOff'
-
   smartylighting.streetlights.1.0.action.{streetlightId}.dim:
     parameters:
       streetlightId:
@@ -86,7 +81,6 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
       message:
         $ref: '#/components/messages/dimLight'
-
 components:
   messages:
     lightMeasured:
@@ -128,18 +122,18 @@ components:
           minimum: 0
           description: Light intensity measured in lumens.
         sentAt:
-          $ref: "#/components/schemas/sentAt"
+          $ref: '#/components/schemas/sentAt'
     turnOnOffPayload:
       type: object
       properties:
         command:
           type: string
           enum:
-            - on
-            - off
+            - 'on'
+            - 'off'
           description: Whether to turn on or off the light.
         sentAt:
-          $ref: "#/components/schemas/sentAt"
+          $ref: '#/components/schemas/sentAt'
     dimLightPayload:
       type: object
       properties:
@@ -149,12 +143,11 @@ components:
           minimum: 0
           maximum: 100
         sentAt:
-          $ref: "#/components/schemas/sentAt"
+          $ref: '#/components/schemas/sentAt'
     sentAt:
       type: string
       format: date-time
       description: Date and time when the message was sent.
-
   securitySchemes:
     apiKey:
       type: apiKey
@@ -165,41 +158,39 @@ components:
       description: Flows to support OAuth 2.0
       flows:
         implicit:
-          authorizationUrl: 'https://authserver.example/auth'
+          authorizationUrl: https://authserver.example/auth
           scopes:
-            'streetlights:on': Ability to switch lights on
-            'streetlights:off': Ability to switch lights off
-            'streetlights:dim': Ability to dim the lights
+            streetlights:on: Ability to switch lights on
+            streetlights:off: Ability to switch lights off
+            streetlights:dim: Ability to dim the lights
         password:
-          tokenUrl: 'https://authserver.example/token'
+          tokenUrl: https://authserver.example/token
           scopes:
-            'streetlights:on': Ability to switch lights on
-            'streetlights:off': Ability to switch lights off
-            'streetlights:dim': Ability to dim the lights
+            streetlights:on: Ability to switch lights on
+            streetlights:off: Ability to switch lights off
+            streetlights:dim: Ability to dim the lights
         clientCredentials:
-          tokenUrl: 'https://authserver.example/token'
+          tokenUrl: https://authserver.example/token
           scopes:
-            'streetlights:on': Ability to switch lights on
-            'streetlights:off': Ability to switch lights off
-            'streetlights:dim': Ability to dim the lights
+            streetlights:on: Ability to switch lights on
+            streetlights:off: Ability to switch lights off
+            streetlights:dim: Ability to dim the lights
         authorizationCode:
-          authorizationUrl: 'https://authserver.example/auth'
-          tokenUrl: 'https://authserver.example/token'
-          refreshUrl: 'https://authserver.example/refresh'
+          authorizationUrl: https://authserver.example/auth
+          tokenUrl: https://authserver.example/token
+          refreshUrl: https://authserver.example/refresh
           scopes:
-            'streetlights:on': Ability to switch lights on
-            'streetlights:off': Ability to switch lights off
-            'streetlights:dim': Ability to dim the lights
+            streetlights:on: Ability to switch lights on
+            streetlights:off: Ability to switch lights off
+            streetlights:dim: Ability to dim the lights
     openIdConnectWellKnown:
       type: openIdConnect
-      openIdConnectUrl: 'https://authserver.example/.well-known'
-
+      openIdConnectUrl: https://authserver.example/.well-known
   parameters:
     streetlightId:
       description: The ID of the streetlight.
       schema:
         type: string
-
   messageTraits:
     commonHeaders:
       headers:
@@ -209,7 +200,6 @@ components:
             type: integer
             minimum: 0
             maximum: 100
-
   operationTraits:
     kafka:
       bindings:

@@ -1,0 +1,35 @@
+asyncapi: 2.2.0
+id: urn:com:smartylighting:streetlights:server
+info:
+  title: Streetlights API
+  version: 1.0.0
+  description: |
+    The Smartylighting Streetlights API allows you to remotely manage the city lights.
+
+    ### Check out its awesome features:
+
+    * Turn a specific streetlight on/off 🌃
+    * Dim a specific streetlight 😎
+    * Receive real-time information about environmental lighting conditions 📈
+  termsOfService: http://asyncapi.org/terms/
+  contact:
+    name: API Support
+    url: http://www.asyncapi.org/support
+    email: support@asyncapi.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: root-tag1
+    externalDocs:
+      description: External docs description 1
+      url: https://www.asyncapi.com/
+  - name: root-tag2
+    description: Description 2
+    externalDocs:
+      url: https://www.asyncapi.com/
+  - name: root-tag4
+    description: Description 4
+  - name: root-tag5
+    externalDocs:
+      url: https://www.asyncapi.com/

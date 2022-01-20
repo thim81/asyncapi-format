@@ -85,7 +85,7 @@ function prioritySort(jsonProp, sortPriority, options) {
  * @param {object} options AsyncAPI-format sort options
  * @returns {object} Sorted AsyncAPI document
  */
-function asyncapiSort(oaObj, options) {
+async function asyncapiSort(oaObj, options) {
   // Skip sorting, when the option "no-sort" is set
   if (options.sort === false) {
     return oaObj;
@@ -159,7 +159,7 @@ function asyncapiSort(oaObj, options) {
  * @param {object} options AsyncAPI-format filter options
  * @returns {object} Filtered AsyncAPI document
  */
-function asyncapiFilter(oaObj, options) {
+async function asyncapiFilter(oaObj, options) {
   let jsonObj = JSON.parse(JSON.stringify(oaObj)); // Deep copy of the schema object
   let defaultFilter = JSON.parse(fs.readFileSync(__dirname + "/defaultFilter.json", 'utf8'))
   let filterSet = Object.assign({}, defaultFilter, options.filterSet);
@@ -237,9 +237,9 @@ function asyncapiFilter(oaObj, options) {
         comps.operationTraits[compOpTraits] = {...comps.operationTraits[compOpTraits], used: true};
       }
     }
-    // Filter out object matching the "methods"
+    // Filter out object matching the "operations"
     if (filterKeys.length > 0 && filterKeys.includes(this.key)) {
-      // debugFilterStep = 'Filter - methods'
+      // debugFilterStep = 'Filter - operations'
       // Parent has other nodes, so remove only targeted node
       this.remove();
     }
@@ -251,6 +251,13 @@ function asyncapiFilter(oaObj, options) {
         // debugFilterStep = 'Filter - tags'
         // Top parent has other nodes, so remove only targeted parent node of matching element
         this.parent.delete();
+      }
+
+      // Filter out the top OpenApi.tags matching the "tags"
+      if (filterArray.length > 0 && this.key === 'tags' && this.path[0] === 'tags') {
+        // debugFilterStep = 'Filter - top tags'
+        node = node.filter(value => !filterArray.includes(value.name))
+        this.update(node);
       }
 
       // Filter out fields matching the flagValues
@@ -343,15 +350,15 @@ function asyncapiFilter(oaObj, options) {
   if (stripUnused.length > 0) {
     const optFs = get(options, 'filterSet.unusedComponents', []) || [];
     unusedComp.schemas = Object.keys(comps.schemas || {}).filter(key => !get(comps, `schemas[${key}].used`)); //comps.schemas[key]?.used);
-    if(optFs.includes('schemas')) options.unusedComp.schemas = [...options.unusedComp.schemas, ...unusedComp.schemas];
+    if (optFs.includes('schemas')) options.unusedComp.schemas = [...options.unusedComp.schemas, ...unusedComp.schemas];
     unusedComp.messages = Object.keys(comps.messages || {}).filter(key => !get(comps, `messages[${key}].used`));//!comps.messages[key]?.used);
-    if(optFs.includes('messages')) options.unusedComp.messages = [...options.unusedComp.messages, ...unusedComp.messages];
+    if (optFs.includes('messages')) options.unusedComp.messages = [...options.unusedComp.messages, ...unusedComp.messages];
     unusedComp.parameters = Object.keys(comps.parameters || {}).filter(key => !get(comps, `parameters[${key}].used`));//!comps.parameters[key]?.used);
-    if(optFs.includes('parameters')) options.unusedComp.parameters = [...options.unusedComp.parameters, ...unusedComp.parameters];
+    if (optFs.includes('parameters')) options.unusedComp.parameters = [...options.unusedComp.parameters, ...unusedComp.parameters];
     unusedComp.messageTraits = Object.keys(comps.messageTraits || {}).filter(key => !get(comps, `messageTraits[${key}].used`));//!comps.messageTraits[key]?.used);
-    if(optFs.includes('messageTraits')) options.unusedComp.messageTraits = [...options.unusedComp.messageTraits, ...unusedComp.messageTraits];
+    if (optFs.includes('messageTraits')) options.unusedComp.messageTraits = [...options.unusedComp.messageTraits, ...unusedComp.messageTraits];
     unusedComp.operationTraits = Object.keys(comps.operationTraits || {}).filter(key => !get(comps, `operationTraits[${key}].used`));//!comps.operationTraits[key]?.used);
-    if(optFs.includes('operationTraits')) options.unusedComp.operationTraits = [...options.unusedComp.operationTraits, ...unusedComp.operationTraits];
+    if (optFs.includes('operationTraits')) options.unusedComp.operationTraits = [...options.unusedComp.operationTraits, ...unusedComp.operationTraits];
     unusedComp.meta.total = unusedComp.schemas.length + unusedComp.messages.length + unusedComp.parameters.length + unusedComp.messageTraits.length + unusedComp.operationTraits.length
   }
 
@@ -384,7 +391,7 @@ function asyncapiFilter(oaObj, options) {
   // Recurse to strip any remaining unusedComp, to a maximum depth of 10
   if (stripUnused.length > 0 && unusedComp.meta.total > 0 && options.unusedDepth <= 10) {
     options.unusedDepth++;
-    const resultObj = asyncapiFilter(jsonObj, options);
+    const resultObj = await asyncapiFilter(jsonObj, options);
     jsonObj = resultObj.data;
     unusedComp = JSON.parse(JSON.stringify(options.unusedComp));
   }
@@ -400,7 +407,7 @@ function asyncapiFilter(oaObj, options) {
  * @param {object} options AsyncAPI-format casing options
  * @returns {object} Formatted casing AsyncAPI document
  */
-function asyncapiChangeCase(asObj, options) {
+async function asyncapiChangeCase(asObj, options) {
   let jsonObj = JSON.parse(JSON.stringify(asObj)); // Deep copy of the schema object
   let defaultCasing = {}; // JSON.parse(fs.readFileSync(__dirname + "/defaultFilter.json", 'utf8'))
   let casingSet = Object.assign({}, defaultCasing, options.casingSet);
@@ -545,7 +552,7 @@ function asyncapiChangeCase(asObj, options) {
  * @param options AsyncAPI-format options
  * @returns {any} Renamed AsyncAPI document
  */
-function asyncapiRename(asObj, options) {
+async function asyncapiRename(asObj, options) {
   let jsonObj = JSON.parse(JSON.stringify(asObj)); // Deep copy of the schema object
 
   // AsyncAPI 2
