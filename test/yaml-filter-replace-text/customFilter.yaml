@@ -1,7 +1,7 @@
 textReplace:
-  - searchFor: 'Smartylighting'
-    replaceWith: 'Dummylighting'
-  - searchFor: 'asyccapi.com/'
+  - searchFor: 'DummyLighting'
+    replaceWith: 'Smartylighting'
+  - searchFor: 'apiasync.com/'
     replaceWith: 'asyncapi.com/'
   - searchFor: 'http://www.apache.org/licenses/LICENSE-2.0'
     replaceWith: 'https://www.apache.org/licenses/LICENSE-2.0.html'

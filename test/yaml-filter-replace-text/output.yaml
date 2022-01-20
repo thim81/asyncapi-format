@@ -3,7 +3,7 @@ info:
   title: Streetlights Kafka API
   version: 1.0.0
   description: |
-    The Dummylighting Streetlights API allows you to remotely manage the city lights.
+    The Smartylighting Streetlights API allows you to remotely manage the city lights.
 
     ### Check out its awesome features [https://www.asyncapi.com/](https://www.asyncapi.com/):
 
