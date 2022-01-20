@@ -270,6 +270,17 @@ function asyncapiFilter(oaObj, options) {
       this.update(oaFilteredTags);
     }
 
+    // Filter out markdown comments in description fields
+    if (this.key === 'description' && isString(node)) {
+      const lines = node.split('\n');
+      if (lines.length > 1) {
+        const filtered = lines.filter(line => !line.startsWith('[comment]: <>'))
+        const cleanDescription = filtered.join('\n');
+        this.update(cleanDescription)
+        node = cleanDescription
+      }
+    }
+
     // Replace words in text with new value
     if (isString(node) && textReplace.length > 0
       && (this.key === 'description' || this.key === 'summary' || this.key === 'url')) {
