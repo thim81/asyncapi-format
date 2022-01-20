@@ -164,16 +164,22 @@ function asyncapiFilter(oaObj, options) {
   let defaultFilter = JSON.parse(fs.readFileSync(__dirname + "/defaultFilter.json", 'utf8'))
   let filterSet = Object.assign({}, defaultFilter, options.filterSet);
   const operationVerbs = ["subscribe", "publish"];
+  const fixedFlags = ["x-asyncapi-format-filter"]
   options.unusedDepth = options.unusedDepth || 0;
 
   // Merge object filters
   const filterKeys = [...filterSet.operations];
   const filterArray = [...filterSet.tags];
-  const filterProps = [...filterSet.operationIds, ...filterSet.flags];
+  const filterProps = [...filterSet.operationIds, ...filterSet.flags, ...fixedFlags];
 
   const stripFlags = [...filterSet.stripFlags];
   const stripUnused = [...filterSet.unusedComponents];
   const textReplace = filterSet.textReplace || [];
+
+  // Convert flag values to flags
+  const filterFlagValuesKeys = Object.keys(Object.assign({}, ...filterSet.flagValues));
+  const filterFlagValues = [...filterSet.flagValues];
+  const filterFlagHash = filterFlagValues.map(o => (JSON.stringify(o)));
 
   // Initiate components tracking
   const comps = {
@@ -184,6 +190,7 @@ function asyncapiFilter(oaObj, options) {
     operationTraits: {},
     meta: {total: 0}
   }
+
   // Prepare unused components
   let unusedComp = {
     schemas: [],
@@ -245,6 +252,28 @@ function asyncapiFilter(oaObj, options) {
         // Top parent has other nodes, so remove only targeted parent node of matching element
         this.parent.delete();
       }
+
+      // Filter out fields matching the flagValues
+      if (filterFlagValuesKeys.length > 0 && filterFlagValuesKeys.includes(this.key)) {
+        for (let i = 0; i < node.length; i++) {
+          const itmObj = {[this.key]: node[i]};
+          const itmObjHash = JSON.stringify(itmObj);
+          if (filterFlagHash.some(filterFlag => filterFlag === itmObjHash)) {
+            // ========================================================================
+            // HACK to overcome the issue with removing items from an array
+            if (get(this, 'parent.parent.key') && this.parent.parent.key === 'x-tagGroups') {
+              // debugFilterStep = 'Filter -x-tagGroups - flagValues - array value'
+              const tagGroup = this.parent.node
+              tagGroup['x-openapi-format-filter'] = true
+              this.parent.update(tagGroup)
+              // ========================================================================
+            } else {
+              // debugFilterStep = 'Filter - Single field - flagValues - array value'
+              this.parent.remove();
+            }
+          }
+        }
+      }
     }
 
     // Single field matching
@@ -256,9 +285,29 @@ function asyncapiFilter(oaObj, options) {
         this.parent.remove();
       }
 
-      // Filter out fields matching the flagValues/operationIds
+      // Filter out fields matching the flagValues
+      if (filterFlagValuesKeys.length > 0 && filterFlagValuesKeys.includes(this.key)) {
+        const itmObj = {[this.key]: node};
+        const itmObjHash = JSON.stringify(itmObj);
+        if (filterFlagHash.some(filterFlagHash => filterFlagHash === itmObjHash)) {
+          // ========================================================================
+          // HACK to overcome the issue with removing items from an array
+          if (get(this, 'parent.parent.key') && this.parent.parent.key === 'x-tagGroups') {
+            // debugFilterStep = 'Filter -x-tagGroups - flagValues - single value'
+            const tagGroup = this.parent.node
+            tagGroup['x-asyncapi-format-filter'] = true
+            this.parent.update(tagGroup)
+            // ========================================================================
+          } else {
+            // debugFilterStep = 'Filter - Single field - flagValues - single value'
+            this.parent.remove();
+          }
+        }
+      }
+
+      // Filter out fields matching the operationIds
       if (filterProps.length > 0 && filterProps.includes(node) && (this.key === 'operationId')) {
-        // Top parent has other nodes, so remove only targeted parent node of matching element
+        // debugFilterStep = 'Filter - Single field - operationIds'
         this.parent.remove();
       }
     }
@@ -325,10 +374,9 @@ function asyncapiFilter(oaObj, options) {
     // if (this.parent && this.parent.key === 'messages' && !operationVerbs.some(i => this.keys.includes(i))) {
     //     this.delete();
     // }
-
     // Strip flags
     if (stripFlags.length > 0 && stripFlags.includes(this.key)) {
-      debugFilterStep = 'Filter - Strip flags'
+      // debugFilterStep = 'Filter - Strip flags'
       this.delete();
     }
   });
