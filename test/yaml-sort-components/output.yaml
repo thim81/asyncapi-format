@@ -97,19 +97,35 @@ channels:
         - $ref: '#/components/operationTraits/kafka'
 components:
   parameters:
-    streetlightId:
-      description: The ID of the streetlight.
-      schema:
-        type: string
-    dimId:
-      description: The ID of the dimmer.
-      schema:
-        type: string
     abcId:
       description: The ID of the abc.
       schema:
         type: number
+    dimId:
+      description: The ID of the dimmer.
+      schema:
+        type: string
+    streetlightId:
+      description: The ID of the streetlight.
+      schema:
+        type: string
   messages:
+    dimLight:
+      name: dimLight
+      title: Dim light
+      summary: Command a particular streetlight to dim the lights.
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        type: object
+        properties:
+          percentage:
+            type: integer
+            description: Percentage to which the light should be dimmed to.
+            minimum: 0
+            maximum: 100
+          sentAt:
+            $ref: '#/components/schemas/sentAt'
     lightMeasured:
       name: lightMeasured
       title: Light measured
@@ -127,23 +143,17 @@ components:
         - $ref: '#/components/messageTraits/commonHeaders'
       payload:
         $ref: '#/components/schemas/turnOnOffPayload'
-    dimLight:
-      name: dimLight
-      title: Dim light
-      summary: Command a particular streetlight to dim the lights.
-      traits:
-        - $ref: '#/components/messageTraits/commonHeaders'
-      payload:
-        type: object
-        properties:
-          percentage:
-            type: integer
-            description: Percentage to which the light should be dimmed to.
-            minimum: 0
-            maximum: 100
-          sentAt:
-            $ref: '#/components/schemas/sentAt'
   schemas:
+    dimLightPayload:
+      type: object
+      properties:
+        percentage:
+          description: Percentage to which the light should be dimmed to.
+          type: integer
+          minimum: 0
+          maximum: 100
+        sentAt:
+          $ref: '#/components/schemas/sentAt'
     lightMeasuredPayload:
       type: object
       properties:
@@ -153,6 +163,10 @@ components:
           minimum: 0
         sentAt:
           $ref: '#/components/schemas/sentAt'
+    sentAt:
+      description: Date and time when the message was sent.
+      type: string
+      format: date-time
     turnOnOffPayload:
       type: object
       properties:
@@ -164,29 +178,7 @@ components:
             - 'off'
         sentAt:
           $ref: '#/components/schemas/sentAt'
-    dimLightPayload:
-      type: object
-      properties:
-        percentage:
-          description: Percentage to which the light should be dimmed to.
-          type: integer
-          minimum: 0
-          maximum: 100
-        sentAt:
-          $ref: '#/components/schemas/sentAt'
-    sentAt:
-      description: Date and time when the message was sent.
-      type: string
-      format: date-time
   messageTraits:
-    eventHeaders:
-      headers:
-        type: object
-        properties:
-          event-header:
-            type: integer
-            minimum: 0
-            maximum: 100
     commonHeaders:
       headers:
         type: object
@@ -195,19 +187,27 @@ components:
             type: integer
             minimum: 0
             maximum: 100
+    eventHeaders:
+      headers:
+        type: object
+        properties:
+          event-header:
+            type: integer
+            minimum: 0
+            maximum: 100
   operationTraits:
-    ws:
-      bindings:
-        ws:
-          clientId: ws-id
-    kafka:
-      bindings:
-        kafka:
-          clientId: my-app-id
     http:
       bindings:
         http:
           clientId: http-id
+    kafka:
+      bindings:
+        kafka:
+          clientId: my-app-id
+    ws:
+      bindings:
+        ws:
+          clientId: ws-id
   securitySchemes:
     apiKey:
       type: apiKey

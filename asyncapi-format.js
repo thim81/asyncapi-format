@@ -106,7 +106,9 @@ function asyncapiSort(oaObj, options) {
         && sortComponentsSet.length > 0 && sortComponentsSet.includes(this.key)
       ) {
         // debugStep = 'Component sorting by alphabet'
-        this.update(prioritySort(node, []));
+        let sortedObj = JSON.parse(JSON.stringify(node)); // Deep copy of the schema object
+        node = prioritySort(sortedObj, []);
+        this.update(node);
       }
 
       // Generic sorting
