@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const traverse = require('traverse');
-const {isString, isObject, isArray} = require("./util-types");
+const {isString, isArray, isObject} = require("./util-types");
 const {
   adaCase,
   camelCase,
@@ -93,13 +93,22 @@ function asyncapiSort(oaObj, options) {
 
   let jsonObj = JSON.parse(JSON.stringify(oaObj)); // Deep copy of the schema object
   let sortSet = options.sortSet || JSON.parse(fs.readFileSync(__dirname + "/defaultSort.json", 'utf8'));
-
+  let sortComponentsSet = options.sortComponentsSet || JSON.parse(fs.readFileSync(__dirname + "/defaultSortComponents.json", 'utf8'));
   let debugStep = '' // uncomment // debugStep below to see which sort part is triggered
 
   // Recursive traverse through AsyncAPI document
   traverse(jsonObj).forEach(function (node) {
     // if (obj.hasOwnProperty(this.key) && obj[this.key] && typeof obj[this.key] === 'object') {
     if (typeof node === 'object') {
+
+      // Components sorting by alphabet
+      if (this.parent && this.parent.key && this.parent.key && this.parent.key === 'components'
+        && sortComponentsSet.length > 0 && sortComponentsSet.includes(this.key)
+      ) {
+        // debugStep = 'Component sorting by alphabet'
+        node = prioritySort(node, []);
+      }
+
       // Generic sorting
       if (sortSet.hasOwnProperty(this.key) && Array.isArray(sortSet[this.key])) {
 
@@ -153,27 +162,70 @@ function asyncapiFilter(oaObj, options) {
   let defaultFilter = JSON.parse(fs.readFileSync(__dirname + "/defaultFilter.json", 'utf8'))
   let filterSet = Object.assign({}, defaultFilter, options.filterSet);
   const operationVerbs = ["subscribe", "publish"];
+  options.unusedDepth = options.unusedDepth || 0;
 
   // Merge object filters
   const filterKeys = [...filterSet.operations];
   const filterArray = [...filterSet.tags];
   const filterProps = [...filterSet.operationIds, ...filterSet.flags];
 
+  const stripUnused = [...filterSet.unusedComponents];
+
+  // Initiate components tracking
+  const comps = {
+    schemas: {},
+    messages: {},
+    parameters: {},
+    messageTraits: {},
+    operationTraits: {},
+    meta: {total: 0}
+  }
   // Prepare unused components
   let unusedComp = {
     schemas: [],
-    responses: [],
+    messages: [],
     parameters: [],
-    examples: [],
-    requestBodies: [],
-    headers: [],
+    messageTraits: [],
+    operationTraits: [],
     meta: {total: 0}
   }
+  // Use options.unusedComp to collect unused components during multiple recursion
+  if (!options.unusedComp) options.unusedComp = JSON.parse(JSON.stringify(unusedComp));
 
   let debugFilterStep = '' // uncomment // debugFilterStep below to see which sort part is triggered
 
   traverse(jsonObj).forEach(function (node) {
+    // Register components presence
+    if (get(this, 'parent.parent.key') && this.parent.parent.key === 'components') {
+      if (get(this, 'parent.key') && this.parent.key && comps[this.parent.key]) {
+        comps[this.parent.key][this.key] = {...comps[this.parent.key][this.key], present: true};
+        comps.meta.total = comps.meta.total++;
+      }
+    }
 
+    // Register components usage
+    if (this.key === '$ref') {
+      if (node.startsWith('#/components/schemas/')) {
+        const compSchema = node.replace('#/components/schemas/', '');
+        comps.schemas[compSchema] = {...comps.schemas[compSchema], used: true};
+      }
+      if (node.startsWith('#/components/messages/')) {
+        const compMess = node.replace('#/components/messages/', '');
+        comps.messages[compMess] = {...comps.messages[compMess], used: true};
+      }
+      if (node.startsWith('#/components/parameters/')) {
+        const compParam = node.replace('#/components/parameters/', '');
+        comps.parameters[compParam] = {...comps.parameters[compParam], used: true};
+      }
+      if (node.startsWith('#/components/messageTraits/')) {
+        const compMessTraits = node.replace('#/components/messageTraits/', '');
+        comps.messageTraits[compMessTraits] = {...comps.messageTraits[compMessTraits], used: true};
+      }
+      if (node.startsWith('#/components/operationTraits/')) {
+        const compOpTraits = node.replace('#/components/operationTraits/', '');
+        comps.operationTraits[compOpTraits] = {...comps.operationTraits[compOpTraits], used: true};
+      }
+    }
     // Filter out object matching the "methods"
     if (filterKeys.length > 0 && filterKeys.includes(this.key)) {
       // debugFilterStep = 'Filter - methods'
@@ -216,18 +268,49 @@ function asyncapiFilter(oaObj, options) {
     }
   });
 
+  if (stripUnused.length > 0) {
+    const optFs = get(options, 'filterSet.unusedComponents', []) || [];
+    unusedComp.schemas = Object.keys(comps.schemas || {}).filter(key => !get(comps, `schemas[${key}].used`)); //comps.schemas[key]?.used);
+    if(optFs.includes('schemas')) options.unusedComp.schemas = [...options.unusedComp.schemas, ...unusedComp.schemas];
+    unusedComp.messages = Object.keys(comps.messages || {}).filter(key => !get(comps, `messages[${key}].used`));//!comps.messages[key]?.used);
+    if(optFs.includes('messages')) options.unusedComp.messages = [...options.unusedComp.messages, ...unusedComp.messages];
+    unusedComp.parameters = Object.keys(comps.parameters || {}).filter(key => !get(comps, `parameters[${key}].used`));//!comps.parameters[key]?.used);
+    if(optFs.includes('parameters')) options.unusedComp.parameters = [...options.unusedComp.parameters, ...unusedComp.parameters];
+    unusedComp.messageTraits = Object.keys(comps.messageTraits || {}).filter(key => !get(comps, `messageTraits[${key}].used`));//!comps.messageTraits[key]?.used);
+    if(optFs.includes('messageTraits')) options.unusedComp.messageTraits = [...options.unusedComp.messageTraits, ...unusedComp.messageTraits];
+    unusedComp.operationTraits = Object.keys(comps.operationTraits || {}).filter(key => !get(comps, `operationTraits[${key}].used`));//!comps.operationTraits[key]?.used);
+    if(optFs.includes('operationTraits')) options.unusedComp.operationTraits = [...options.unusedComp.operationTraits, ...unusedComp.operationTraits];
+    unusedComp.meta.total = unusedComp.schemas.length + unusedComp.messages.length + unusedComp.parameters.length + unusedComp.messageTraits.length + unusedComp.operationTraits.length
+  }
+
   // Clean-up jsonObj
   traverse(jsonObj).forEach(function (node) {
+    // Remove unused component
+    if (this.path[0] === 'components' && stripUnused.length > 0) {
+      if (stripUnused.includes(this.path[1]) && unusedComp[this.path[1]].includes(this.key)) {
+        // debugFilterStep = 'Filter - Remove unused components'
+        this.delete();
+      }
+    }
+
     // Remove empty objects
     if (node && Object.keys(node).length === 0 && node.constructor === Object) {
       // debugFilterStep = 'Filter - Remove empty objects'
       this.delete();
     }
-    // Remove path items without operations
+    // Remove message items without operations
     // if (this.parent && this.parent.key === 'messages' && !operationVerbs.some(i => this.keys.includes(i))) {
     //     this.delete();
     // }
   });
+
+  // Recurse to strip any remaining unusedComp, to a maximum depth of 10
+  if (stripUnused.length > 0 && unusedComp.meta.total > 0 && options.unusedDepth <= 10) {
+    options.unusedDepth++;
+    const resultObj = asyncapiFilter(jsonObj, options);
+    jsonObj = resultObj.data;
+    unusedComp = JSON.parse(JSON.stringify(options.unusedComp));
+  }
 
   // Return result object
   return {data: jsonObj, resultData: {unusedComp: unusedComp}}
@@ -497,6 +580,21 @@ function changeCase(valueAsString, caseType) {
   }
 }
 
+/**
+ * Alternative optional chaining function, to provide support for NodeJS 12
+ * TODO replace this with native ?. optional chaining once NodeJS12 is deprecated.
+ * @param obj object
+ * @param path path to access the properties
+ * @param defaultValue
+ * @returns {T}
+ */
+function get(obj, path, defaultValue = undefined) {
+  const travel = regexp => String.prototype.split.call(path, regexp)
+    .filter(Boolean).reduce((res, key) => res !== null && res !== undefined ? res[key] : res, obj);
+
+  const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
+  return result === undefined || result === obj ? defaultValue : result;
+}
 
 module.exports = {
   asyncapiFilter: asyncapiFilter,
