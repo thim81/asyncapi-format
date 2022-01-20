@@ -13,7 +13,7 @@ const tests = fs.readdirSync(__dirname).filter(file => {
 
 // SELECTIVE TESTING DEBUG
 // const tests = ['yaml-sort-components']
-// destroyOutput = true
+destroyOutput = true
 
 describe('asyncapi-format tests', () => {
   tests.forEach((test) => {
