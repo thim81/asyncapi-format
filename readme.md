@@ -185,12 +185,13 @@ matching item from the AsyncAPI document. You can combine multiple types to filt
 For more complex use-cases, we can advise the excellent https://github.com/Mermade/openapi-filter package, which has 
 extended options for filtering AsyncAPI documents.
 
-| Type         | Description                    | Type  | Examples                         |
-|--------------|--------------------------------|-------|----------------------------------|
-| operations   | a list AsyncAPI operations.    | array | ['subscribe','publish']          |
-| tags         | a list AsyncAPI tags.          | array | ['measure','command']            |
-| operationIds | a list AsyncAPI operation ID's.| array | ['turnOff','dimLight']           |
-| flags        | a list of custom flags         | array | ['x-exclude','x-internal']       |
+| Type         | Description                         | Type  | Examples                                    |
+|--------------|-------------------------------------|-------|---------------------------------------------|
+| operations   | AsyncAPI operations.                | array | ['subscribe','publish']                     |
+| tags         | AsyncAPI tags.                      | array | ['measure','command']                       |
+| operationIds | AsyncAPI operation ID's.            | array | ['turnOff','dimLight']                      |
+| flags        | Custom flags                        | array | ['x-exclude','x-internal']                  |
+| textReplace  | Search & replace values to replace  | array | [{'searchFor':'API','replaceWith':'Event'}] |
 
 Some more details on the available filter types:
 
@@ -296,6 +297,26 @@ channels:
         subscribe:
             operationId: turnOn
 ```
+
+### Filter - textReplace
+
+=> **textReplace**: "search & replace" option to replace text in the AsyncAPI specification
+
+The `textReplace` provides a "search & replace" method, that will search for a text/word/characters in the AsyncAPI description, summary, URL fields and replace it with another text/word/characters.
+This is very useful to replace data in the AsyncAPI specification.
+
+A `textReplace` example:
+
+```yaml
+textReplace:
+    - searchFor: 'DummyLighting'
+      replaceWith: 'Smartylighting'
+    - searchFor: 'apiasync.com/'
+      replaceWith: 'asyncapi.com/'
+```
+
+This will replace all "DummyLighting" with "Smartylighting" & "apiasync.com/" with "asyncapi.com/" in the AsyncAPI document.
+
 ## AsyncAPI formatting configuration options
 
 The asyncapi-format CLI formatting option can assist with keeping the field names consistent by automatically changing the casing of the properties/keys/names for the different elements in the AsyncAPI document.
