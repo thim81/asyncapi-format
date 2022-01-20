@@ -171,6 +171,7 @@ function asyncapiFilter(oaObj, options) {
   const filterArray = [...filterSet.tags];
   const filterProps = [...filterSet.operationIds, ...filterSet.flags];
 
+  const stripFlags = [...filterSet.stripFlags];
   const stripUnused = [...filterSet.unusedComponents];
   const textReplace = filterSet.textReplace || [];
 
@@ -324,6 +325,12 @@ function asyncapiFilter(oaObj, options) {
     // if (this.parent && this.parent.key === 'messages' && !operationVerbs.some(i => this.keys.includes(i))) {
     //     this.delete();
     // }
+
+    // Strip flags
+    if (stripFlags.length > 0 && stripFlags.includes(this.key)) {
+      debugFilterStep = 'Filter - Strip flags'
+      this.delete();
+    }
   });
 
   // Recurse to strip any remaining unusedComp, to a maximum depth of 10

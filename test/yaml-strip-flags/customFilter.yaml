@@ -1,0 +1,7 @@
+flags:
+  - x-visibility
+flagValues: [ ]
+stripFlags:
+  - x-visibility
+  - x-release
+

@@ -54,6 +54,8 @@ or for generating event producers/consumers.
 - [x] Filter AsyncAPI files based on flags
 - [x] Filter AsyncAPI files based on tags
 - [x] Filter AsyncAPI files based on operationID's
+- [x] Strip flags from AsyncAPI files
+- [x] Strip unused components from AsyncAPI files
 - [x] Rename the AsyncAPI title
 - [x] Support AsyncAPI documents in JSON format
 - [x] Support AsyncAPI documents in YAML format
@@ -185,13 +187,15 @@ matching item from the AsyncAPI document. You can combine multiple types to filt
 For more complex use-cases, we can advise the excellent https://github.com/Mermade/openapi-filter package, which has 
 extended options for filtering AsyncAPI documents.
 
-| Type         | Description                         | Type  | Examples                                    |
-|--------------|-------------------------------------|-------|---------------------------------------------|
-| operations   | AsyncAPI operations.                | array | ['subscribe','publish']                     |
-| tags         | AsyncAPI tags.                      | array | ['measure','command']                       |
-| operationIds | AsyncAPI operation ID's.            | array | ['turnOff','dimLight']                      |
-| flags        | Custom flags                        | array | ['x-exclude','x-internal']                  |
-| textReplace  | Search & replace values to replace  | array | [{'searchFor':'API','replaceWith':'Event'}] |
+| Type                | Description                         | Type  | Examples                                    |
+|---------------------|-------------------------------------|-------|---------------------------------------------|
+| operations          | AsyncAPI operations.                | array | ['subscribe','publish']                     |
+| tags                | AsyncAPI tags.                      | array | ['measure','command']                       |
+| operationIds        | AsyncAPI operation ID's.            | array | ['turnOff','dimLight']                      |
+| flags               | Custom flags                        | array | ['x-exclude','x-internal']                  |
+| unusedComponents    | Unused components                   | array | ['examples','schemas']                      |
+| stripFlags          | Custom flags that will be stripped  | array | ['x-exclude','x-internal']                  |
+| textReplace         | Search & replace values to replace  | array | [{'searchFor':'API','replaceWith':'Event'}] |
 
 Some more details on the available filter types:
 
@@ -297,6 +301,20 @@ channels:
         subscribe:
             operationId: turnOn
 ```
+## Filter - unusedComponents
+
+=> **unusedComponents**: Refers to a list of [reusable component types]( https://spec.openapis.org/oas/v3.0.3.html#components-object), from which unused items will be removed.
+
+This option allows you to strip the AsyncAPI document from any unused items of the targeted `components` types.
+Any item in the list of AsyncAPI `components` that is not referenced as `$ref`, will get marked and removed from the AsyncAPI document.
+
+REMARK: We will recursively strip all unused components, with a maximum depth of 10 times. This means that "nested" components, that become unused, will also get removed
+
+Supported component types that can be marked as "unused":
+- schemas
+- messages
+- parameters
+- responses
 
 ### Filter - textReplace
 
@@ -316,6 +334,42 @@ textReplace:
 ```
 
 This will replace all "DummyLighting" with "Smartylighting" & "apiasync.com/" with "asyncapi.com/" in the AsyncAPI document.
+
+### Filter - stripFlags
+
+=> **stripFlags**: Refers to a list of custom properties that can be set on any field in the AsyncAPI document.
+
+The `stripFlags` will remove only the flags, the linked parent and properties will remain. In the example below, this would mean that all
+flags `x-exclude` itself would be stripped from the AsyncAPI document.
+
+Example before:
+
+```yaml
+asyncapi: 2.0.0
+info:
+    title: Streetlights API
+    version: 1.0.0
+channels:
+    smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured:
+        description: The topic on which measured values may be produced and consumed.
+        x-exclude: true
+        subscribe:
+            operationId: turnOn
+```
+
+Example after:
+
+```yaml
+asyncapi: 2.0.0
+info:
+    title: Streetlights API
+    version: 1.0.0
+channels:
+    smartylighting/streetlights/1/0/event/{streetlightId}/lighting/measured:
+        description: The topic on which measured values may be produced and consumed.
+        subscribe:
+            operationId: turnOn
+```
 
 ## AsyncAPI formatting configuration options
 
