@@ -5,12 +5,12 @@
 
 # asyncapi-format
 
-Format an AsyncAPI document by ordering and filtering fields.
+Format an AsyncAPI document by ordering, formatting and filtering fields.
 
-The asyncapi-format CLI can load an AsyncAPI file, sorts the AsyncAPI fields by ordering them in a hierarchical order,
-and can output the file with clean indenting, to either JSON or YAML.
+The asyncapi-format CLI can load an AsyncAPI file, sorts the AsyncAPI fields by ordering them in a hierarchical order, format the casing of the fields and
+can output the file with clean indenting, to either JSON or YAML.
 
-Next to the ordering, the CLI provides additional options to filter fields & parts of the AsyncAPI document based on
+Next to the ordering & formatting, the CLI provides additional options to filter fields & parts of the AsyncAPI document based on
 flags, tags, operations and operationID's.
 
 This `asyncapi-format` CLI is based on [openapi-format](https://github.com/thim81/openapi-format) as a separate
@@ -24,8 +24,9 @@ package to allow customisation specific for AsyncAPI use-cases.
     + [Global Installation](#global-installation)
     + [NPX usage](#npx-usage)
 * [Command Line Interface](#command-line-interface)
-* [AsyncAPI format options](#asyncapi-format-options)
+* [AsyncAPI format CLI options](#asyncapi-format-cli-options)
 * [AsyncAPI sort configuration options](#asyncapi-sort-configuration-options)
+* [AsyncAPI formatting configuration options](#asyncapi-formatting-configuration-options)
 * [AsyncAPI filter options](#asyncapi-filter-options)
 * [CLI sort usage](#cli-sort-usage)
 * [CLI filter usage](#cli-filter-usage)
@@ -36,7 +37,7 @@ package to allow customisation specific for AsyncAPI use-cases.
 ## Use-cases
 
 When working on large AsyncAPI documents or with multiple team members, the file can be become messy and difficult to
-compare changes. By sorting it from time to time, the fields are all ordered in a structured manner, which will help you
+compare changes. By sorting & formatting from time to time, the fields are all ordered in a structured manner & properly cased, which will help you
 to maintain the file with greater ease.
 
 The filtering is a handy add-on to remove specific elements from the AsyncAPI like internal endpoints, beta tags, ...
@@ -47,6 +48,7 @@ or for generating event producers/consumers.
 
 - [x] Order AsyncAPI fields in a default order
 - [x] Order AsyncAPI fields in a custom order
+- [x] Order Components elements by alphabet
 - [x] Format the casing (camelCase,PascalCase, ...) of component elements
 - [x] Filter AsyncAPI files based on operations
 - [x] Filter AsyncAPI files based on flags
@@ -106,44 +108,46 @@ Arguments:
 
 Options:
 
-  --output, -o     Save the formated AsyncAPI file as JSON/YAML            [path]
+  --output, -o          Save the formated AsyncAPI file as JSON/YAML            [path]
   
-  --sortFile       The file to specify custom AsyncAPI fields ordering     [path]
-  --casingFile     The file to specify casing rules                        [path]
-  --filterFile     The file to specify filter rules                        [path]
+  --sortFile            The file to specify custom AsyncAPI fields ordering     [path]
+  --casingFile          The file to specify casing rules                        [path]
+  --filterFile          The file to specify filter rules                        [path]
     
-  --no-sort        Don't sort the AsyncAPI file                         [boolean]
+  --no-sort             Don't sort the AsyncAPI file                         [boolean]
+  --sortComponentsFile  The file with components to sort alphabetically         [path]
   
-  --rename         Rename the AsyncAPI title                             [string]
+  --rename              Rename the AsyncAPI title                             [string]
 
-  --configFile     The file with the AsyncAPI-format CLI options            [path]
+  --configFile          The file with the AsyncAPI-format CLI options           [path]
   
-  --lineWidth      Max line width of YAML output                         [number]
+  --lineWidth           Max line width of YAML output                         [number]
   
-  --json           Prints the file to stdout as JSON                    [boolean]
-  --yaml           Prints the file to stdout as YAML                    [boolean]
+  --json                Prints the file to stdout as JSON                    [boolean]
+  --yaml                Prints the file to stdout as YAML                    [boolean]
   
-  --help           Show help                                            [boolean]
-  --verbose        Output more details of the filter process              [count]
+  --help                Show help                                            [boolean]
+  --verbose             Output more details of the filter process              [count]
 ```
 
-## AsyncAPI format options
+## AsyncAPI format CLI options
 
-| Parameter    | Alias         | Description                                                                 | Input type   | Default          | Info      |
-|--------------|---------------|-----------------------------------------------------------------------------|--------------|------------------|-----------|
-| file         |               | the original AsyncAPI file                                                  | path to file |                  | required  |
-| --output     | -o            | save the formatted AsyncAPI file as JSON/YAML                               | path to file |                  | optional  |
-| --sortFile   | -s            | the file to specify custom AsyncAPI fields ordering                         | path to file | defaultSort.json | optional  |
-| --filterFile | -f            | the file to specify filter setting                                          | path to file |                  | optional  |
-| --casingFile | -c            | the file to specify casing setting                                          | path to file |                  | optional  |
-| --no-sort    |               | don't sort the AsyncAPI file                                                | boolean      | FALSE            | optional  |
-| --rename     |               | rename the AsyncAPI title                                                   | string       |                  | optional  |
-| --configFile | -c            | the file with all the format config options                                 | path to file |                  | optional  |
-| --lineWidth  |               | max line width of YAML output                                               | number       | -1 (Infinity)    | optional  |
-| --json       |               | prints the file to stdout as JSON                                           |              | FALSE            | optional  |
-| --yaml       |               | prints the file to stdout as YAML                                           |              | FALSE            | optional  |
-| --verbose    | -v, -vv, -vvv | verbosity that can be increased, which will show more output of the process |              |                  | optional  |
-| --help       | h             | display help for command                                                    |              |                  | optional  |
+| Parameter            | Alias         | Description                                                                 | Input type   | Default                    | Info      |
+|----------------------|---------------|-----------------------------------------------------------------------------|--------------|----------------------------|-----------|
+| file                 |               | the original AsyncAPI file                                                  | path to file |                            | required  |
+| --output             | -o            | save the formatted AsyncAPI file as JSON/YAML                               | path to file |                            | optional  |
+| --sortFile           | -s            | the file to specify custom AsyncAPI fields ordering                         | path to file | defaultSort.json           | optional  |
+| --filterFile         | -f            | the file to specify filter setting                                          | path to file | defaultFilter.json         | optional  |
+| --casingFile         | -c            | the file to specify casing setting                                          | path to file |                            | optional  |
+| --no-sort            |               | don't sort the AsyncAPI file                                                | boolean      | FALSE                      | optional  |
+| --sortComponentsFile |               | sort the items of the components (schemas, parameters, ...) by alphabet     | path to file | defaultSortComponents.json | optional  |
+| --rename             |               | rename the AsyncAPI title                                                   | string       |                            | optional  |
+| --configFile         | -c            | the file with all the format config options                                 | path to file |                            | optional  |
+| --lineWidth          |               | max line width of YAML output                                               | number       | -1 (Infinity)              | optional  |
+| --json               |               | prints the file to stdout as JSON                                           |              | FALSE                      | optional  |
+| --yaml               |               | prints the file to stdout as YAML                                           |              | FALSE                      | optional  |
+| --verbose            | -v, -vv, -vvv | verbosity that can be increased, which will show more output of the process |              |                            | optional  |
+| --help               | h             | display help for command                                                    |              |                            | optional  |
 
 ## AsyncAPI sort configuration options
 
@@ -248,7 +252,6 @@ components:
                 $ref: "#/components/schemas/lightMeasuredPayload"
             tags:
                 - measure
-
 ```
 
 ### Filter - operationIds
@@ -407,40 +410,48 @@ Example after:
 $ asyncapi-format asyncapi.json -o asyncapi-formatted.json
 ```
 
-- Format a AsyncAPI document with the default sorting and saves it as a new YAML file
+- Format an AsyncAPI document with the default sorting and saves it as a new YAML file
 
 ```shell
 $ asyncapi-format asyncapi.yaml -o asyncapi-formatted.yaml
 ```
 
-- Format a AsyncAPI document with the default sorting and output it as JSON to STDOUT
+- Format an AsyncAPI document with the default sorting and output it as JSON to STDOUT
 
 ```shell
 $ asyncapi-format asyncapi.json --json
 ```
 
-- Format a AsyncAPI document with the default sorting and output it as YAML to STDOUT
+- Format an AsyncAPI document with the default sorting and output it as YAML to STDOUT
 
 ```shell
 $ asyncapi-format asyncapi.json --yaml
 ```
 
-- Format a AsyncAPI JSON document with the default sorting and save it as YAML
+- Format an AsyncAPI JSON document with the default sorting and save it as YAML
 
 ```shell
 $ asyncapi-format asyncapi.json -o asyncapi.yaml
 ```
 
-- Format a AsyncAPI document but skip the sorting and save it as a new JSON file
-
-example:
+- Format an AsyncAPI document but skip the sorting and save it as a new JSON file
 
 ```shell
 $ asyncapi-format asyncapi.json -o asyncapi-formatted.json --no-sort
 ```
 
-Which should keep the AsyncAPI fields in the same order. This can be needed, when you only want to do a filtering or
+This should keep the AsyncAPI fields in the same order. This can be needed, when you only want to do a filtering or
 rename action.
+
+- Format an AsyncAPI document, including sorting all elements in the components section
+
+```shell
+$ asyncapi-format asyncapi.json -o asyncapi-formatted.json --sortComponentsFile ./test/json-sort-components/customSortComponents.json
+```
+
+This will sort all elements in the components ( components/schemas, components/messages, components/parameters,
+components/securitySchemes, ...) section by alphabet.
+
 
 ## CLI filter usage
 
@@ -474,7 +485,7 @@ operationIds:
 - Format a AsyncAPI document by changing the title and saves it as a new JSON file
 
 During CI/CD pipelines, you might want to create different results of the AsyncAPI document. Having the option to rename
-them, might make it easier to work with the results, so that is why we provide this command option.
+them might make it easier to work with the results, so that is why we provide this command option.
 
 ```shell
 $ asyncapi-format asyncapi.json -o asyncapi.json --rename "Streetlights API - AsyncAPI 2.0"
@@ -502,7 +513,7 @@ which results in
 
 ## CLI configuration usage
 
-All the CLI options can be managed in separate configuration file and passed along the asyncapi-format command. This
+All the CLI options can be managed in a separate configuration file and passed along the asyncapi-format command. This
 will make configuration easier, especially in CI/CD implementations where the configuration can be stored in version
 control systems.
 
@@ -513,15 +524,18 @@ $ asyncapi-format asyncapi.json --configFile asyncapi-format-options.json
 ```
 
 The formatting will happen based on all the options set in the `asyncapi-format-options.json` file. All the
-available [AsyncAPI format options](https://github.com/thim81/asyncapi-format#asyncapi-format-options) can be used in
+available [AsyncAPI format options](https://github.com/thim81/asyncapi-format#asyncapi-format-cli-options) can be used in
 the config file.
+
+## OpenAPI documents
+
+For handling OpenAPI documents, we have created a separate
+package [openapi-format](https://github.com/thim81/openapi-format) to allow customisation specific for OpenAPI
+use-cases.
 
 ## Credits
 
-This package is inspired by
-the [@microsoft.azure/format-spec](https://www.npmjs.com/package/@microsoft.azure/format-spec) from @fearthecowboy. The
-original code was not available on Github, with the last update was 3 years ago, so to improve support and extend it we
-tried to reproduce the original functionality.
+The filter capabilities from `asyncapi-format` are a light version grounded by the work from [@MikeRalphson](https://github.com/mikeralphson) on
+the [openapi-filter](https://github.com/Mermade/openapi-filter) package.
 
-The filter capabilities from `asyncapi-format` are a light version inspired by the work from @MikeRalphson on
-the https://github.com/Mermade/openapi-filter package.
+The casing options available in `asyncapi-format` are powered by the excellent [case-anything](https://github.com/mesqueeb/case-anything) nano package from Luca Ban ([@mesqueeb](https://github.com/mesqueeb)).
