@@ -172,6 +172,7 @@ function asyncapiFilter(oaObj, options) {
   const filterProps = [...filterSet.operationIds, ...filterSet.flags];
 
   const stripUnused = [...filterSet.unusedComponents];
+  const textReplace = filterSet.textReplace || [];
 
   // Initiate components tracking
   const comps = {
@@ -268,6 +269,14 @@ function asyncapiFilter(oaObj, options) {
       const oaFilteredTags = oaTags.filter(item => !filterProps.some(i => (Object.keys(item).includes(i))));
       this.update(oaFilteredTags);
     }
+
+    // Replace words in text with new value
+    if (isString(node) && textReplace.length > 0
+      && (this.key === 'description' || this.key === 'summary' || this.key === 'url')) {
+      const replaceRes = valueReplace(node, textReplace);
+      this.update(replaceRes);
+      node = replaceRes
+    }
   });
 
   if (stripUnused.length > 0) {
@@ -296,7 +305,7 @@ function asyncapiFilter(oaObj, options) {
     }
 
     // Remove empty objects
-    if (node && Object.keys(node).length === 0 && node.constructor === Object) {
+    if (node && Object.keys(node).length === 0 && node.constructor === Object && this.parent.key !== 'security') {
       // debugFilterStep = 'Filter - Remove empty objects'
       this.delete();
     }
@@ -580,6 +589,15 @@ function changeCase(valueAsString, caseType) {
     default:
       return valueAsString
   }
+}
+
+/**
+ * Function fo escaping input to be treated as a literal string within a regular expression
+ * @param string
+ * @returns {*}
+ */
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /**
