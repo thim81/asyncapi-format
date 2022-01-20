@@ -52,6 +52,7 @@ or for generating event producers/consumers.
 - [x] Format the casing (camelCase,PascalCase, ...) of component elements
 - [x] Filter AsyncAPI files based on operations
 - [x] Filter AsyncAPI files based on flags
+- [x] Filter AsyncAPI files based on flags values
 - [x] Filter AsyncAPI files based on tags
 - [x] Filter AsyncAPI files based on operationID's
 - [x] Strip flags from AsyncAPI files
@@ -193,6 +194,7 @@ extended options for filtering AsyncAPI documents.
 | tags                | AsyncAPI tags.                      | array | ['measure','command']                       |
 | operationIds        | AsyncAPI operation ID's.            | array | ['turnOff','dimLight']                      |
 | flags               | Custom flags                        | array | ['x-exclude','x-internal']                  |
+| flagValues          | Custom flags with a specific value  | array | ['x-version: 1.0','x-version: 3.0']       |
 | unusedComponents    | Unused components                   | array | ['examples','schemas']                      |
 | stripFlags          | Custom flags that will be stripped  | array | ['x-exclude','x-internal']                  |
 | textReplace         | Search & replace values to replace  | array | [{'searchFor':'API','replaceWith':'Event'}] |
@@ -301,9 +303,59 @@ channels:
         subscribe:
             operationId: turnOn
 ```
-## Filter - unusedComponents
+### Filter - flagValues
 
-=> **unusedComponents**: Refers to a list of [reusable component types]( https://spec.openapis.org/oas/v3.0.3.html#components-object), from which unused items will be removed.
+=> **flagValues**: Refers to a flag, custom property which can be set on any field in the AsyncAPI document, and the combination with the value for that flag.
+
+This will remove all fields and attached fields that match the flag with the specific value. 
+
+A `flagValues` example:
+
+```yaml
+flagValues:
+    - x-version: 1.0
+    - x-version: 3.0
+```
+In the example below, this would mean that all items with the flag `x-version` that matches `x-version: 1.0` OR `x-version: 3.0` would be removed from the AsyncAPI document.
+
+```yaml
+asyncapi: '2.2.0'
+info:
+    title: Streetlights Kafka API
+channels:
+    smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured:
+        x-version: 1.0
+```
+
+The filter option `flagValues` also will remove flags that contain an array of values in the AsyncAPI document.
+
+A `flagValues` example:
+
+```yaml
+flagValues:
+    - x-versions: 1.0
+    - x-versions: 2.0
+```
+
+In the example below, this would mean that all items with the flag `x-versions`, which is an array, that match `x-version: 1.0` OR `x-version: 3.0` would be removed from the AsyncAPI document.
+
+```yaml
+asyncapi: '2.2.0'
+info:
+    title: Streetlights Kafka API
+channels:
+    smartylighting.streetlights.1.0.event.{streetlightId}.lighting.measured:
+        x-versions:
+            - 1.0
+            - 3.0
+            - 5.0
+```
+
+Have a look at [flagValues](test/yaml-filter-custom-flagsvalue-value) and [flagValues for array values](test/yaml-filter-custom-flagsvalue-array) for a practical example.
+
+### Filter - unusedComponents
+
+=> **unusedComponents**: Refers to a list of [reusable component types](https://www.asyncapi.com/docs/specifications/2.0.0#componentsObject), from which unused items will be removed.
 
 This option allows you to strip the AsyncAPI document from any unused items of the targeted `components` types.
 Any item in the list of AsyncAPI `components` that is not referenced as `$ref`, will get marked and removed from the AsyncAPI document.
@@ -314,7 +366,8 @@ Supported component types that can be marked as "unused":
 - schemas
 - messages
 - parameters
-- responses
+- messageTraits
+- operationTraits
 
 ### Filter - textReplace
 
@@ -604,7 +657,7 @@ the config file.
 
 ## OpenAPI documents
 
-For handling OpenAPI documents, we have created a separate
+For handling OpenAPI documents, we have created a separate 
 package [openapi-format](https://github.com/thim81/openapi-format) to allow customisation specific for OpenAPI
 use-cases.
 
