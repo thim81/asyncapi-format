@@ -161,17 +161,17 @@ the [defaultSort.json](https://github.com/thim81/asyncapi-format/blob/main/defau
 You can easily modify this by specifying your own ordering per key, which can passed on to the CLI (see below for an
 example on how to do this).
 
-| Key         | Ordered by                                                                                                      | AsyncAPI reference                                                        |
-| ----------- | ----------------------------------------------------------------------------------------------------------------| ------------------------------------------------------------------------- |
-| root        | - asyncapi<br>\- info<br>\- servers<br>\- channels<br>\- components<br>\- tags<br>\- externalDocs               | https://www.asyncapi.com/docs/specifications/2.0.0#A2SObject              |
-| channels    | - description<br>\- parameters<br>\- subscribe<br>\- publish<br>\- bindings                                     | https://www.asyncapi.com/docs/specifications/2.0.0#channelItemObject      |
-| parameters  | - name<br>\- in<br>\- description<br>\- required<br>\- schema                                                   | https://www.asyncapi.com/docs/specifications/2.0.0#parametersObject       |
-| subscribe   | - operationId<br>\- summary<br>\- description<br>\- message<br>\- traits<br>\- tags                             | https://www.asyncapi.com/docs/specifications/2.0.0#operationObject        |
-| publish     | - operationId<br>\- summary<br>\- description<br>\- message<br>\- traits<br>\- tags                             | https://www.asyncapi.com/docs/specifications/2.0.0#operationObject        |
-| messages    | - name<br>\- title<br>\- summary<br>\- description<br>\- headers<br>\- payload<br>\- contentType                | https://www.asyncapi.com/docs/specifications/2.0.0#messageObject          |
-| payload     | - description<br>\- type<br>\- items<br>\- properties<br>\- format<br>\- example<br>\- default                  | https://www.asyncapi.com/docs/specifications/2.0.0#schemaObject           |
-| components  | - parameters<br>\- messages  <br>\- schemas                                                                     | https://www.asyncapi.com/docs/specifications/2.0.0#componentsObject               |
-| schema      | - description<br>\- type<br>\- items<br>\- properties<br>\- format<br>\- example<br>\- default                  | https://www.asyncapi.com/docs/specifications/2.0.0#schemaObject           |
+| Key         | Ordered by                                                                                                      | AsyncAPI reference         |
+| ----------- | ----------------------------------------------------------------------------------------------------------------| -------------------------- |
+| root        | - asyncapi<br>\- info<br>\- servers<br>\- channels<br>\- components<br>\- tags<br>\- externalDocs               | [AsyncAPI-object](https://www.asyncapi.com/docs/specifications/2.0.0#A2SObject) |
+| channels    | - description<br>\- parameters<br>\- subscribe<br>\- publish<br>\- bindings                                     | [channels-item-object](https://www.asyncapi.com/docs/specifications/2.0.0#channelItemObject) |
+| parameters  | - name<br>\- in<br>\- description<br>\- required<br>\- schema                                                   | [parameters-object](https://www.asyncapi.com/docs/specifications/2.0.0#parametersObject) |
+| subscribe   | - operationId<br>\- summary<br>\- description<br>\- message<br>\- traits<br>\- tags                             | [operation-object](https://www.asyncapi.com/docs/specifications/2.0.0#operationObject) |
+| publish     | - operationId<br>\- summary<br>\- description<br>\- message<br>\- traits<br>\- tags                             | [operation-object](https://www.asyncapi.com/docs/specifications/2.0.0#operationObject) |
+| messages    | - name<br>\- title<br>\- summary<br>\- description<br>\- headers<br>\- payload<br>\- contentType                | [message-object](https://www.asyncapi.com/docs/specifications/2.0.0#messageObject) |
+| payload     | - description<br>\- type<br>\- items<br>\- properties<br>\- format<br>\- example<br>\- default                  | [schema-object](https://www.asyncapi.com/docs/specifications/2.0.0#schemaObject) |
+| components  | - parameters<br>\- messages  <br>\- schemas                                                                     | [components-object](https://www.asyncapi.com/docs/specifications/2.0.0#componentsObject) |
+| schema      | - description<br>\- type<br>\- items<br>\- properties<br>\- format<br>\- example<br>\- default                  | [schema-object](https://www.asyncapi.com/docs/specifications/2.0.0#schemaObject) |
 | schemas     | - description<br>\- type<br>\- items<br>\- properties<br>\- format<br>\- example<br>\- default                  |                                                                           |
 | properties  | - description<br>\- type<br>\- items<br>\- format<br>\- example<br>\- default<br>\- enum                        |                                                                           |
 
