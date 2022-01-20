@@ -16,7 +16,7 @@ program
   .usage('<file> [options]')
   .description('Format a AsyncAPI document by ordering and filtering fields.')
   .option('-o, --output <output>', 'write the formatted AsyncAPI to an output file path.')
-  .option('-s, --sortFile <sortFile>', 'The file to specify custom OpenAPI AsyncAPI ordering.', 'defaultSort.json')
+  .option('-s, --sortFile <sortFile>', 'The file to specify custom OpenAPI AsyncAPI ordering.')
   .option('-c, --casingFile <casingFile>', 'The file to specify casing rules.')
   .option('-f, --filterFile <filterFile>', 'The file to specify filter rules.')
   .option('-c, --configFile <configFile>', 'The file with the AsyncAPI-format CLI options.')
@@ -83,11 +83,11 @@ async function run(asFile, options) {
     try {
       let sortOptions = {sortSet: {}}
       let sortFile = (options.sortFile) ? options.sortFile : __dirname + "/../defaultSort.json"
-      infoOut(`- Sort file:\t\t${options.sortFile}`) // LOG - sort file
+      infoOut(`- Sort file:\t\t${sortFile}`) // LOG - sort file
       sortOptions.sortSet = jy.load(fs.readFileSync(sortFile, 'utf8'));
       options = Object.assign({}, options, sortOptions);
     } catch (err) {
-      console.error('\x1b[31m', `Sort file error - no such file or directory "${options.sortFile}"`)
+      console.error('\x1b[31m', `Sort file error - no such file or directory "${sortFile}"`)
       if (options.verbose >= 1) {
         console.error(err)
       }
@@ -103,6 +103,21 @@ async function run(asFile, options) {
       options = Object.assign({}, options, filterOptions);
     } catch (err) {
       console.error('\x1b[31m', `Filter file error - no such file or directory "${options.filterFile}"`)
+      if (options.verbose >= 1) {
+        console.error(err)
+      }
+    }
+  }
+
+  // apply components sorting by alphabet, if file is present
+  if (options && options.sortComponentsFile) {
+    infoOut(`- Sort Components file:\t ${options.sortComponentsFile}`) // LOG - Sort file
+    try {
+      let sortComponentsOptions = {sortComponentsSet: {}}
+      sortComponentsOptions.sortComponentsSet = jy.load(fs.readFileSync(options.sortComponentsFile, 'utf8'));
+      options = Object.assign({}, options, sortComponentsOptions);
+    } catch (err) {
+      console.error('\x1b[31m', `Sort Components file error - no such file or directory "${options.sortComponentsFile}"`)
       if (options.verbose >= 1) {
         console.error(err)
       }

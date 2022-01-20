@@ -102,11 +102,11 @@ function asyncapiSort(oaObj, options) {
     if (typeof node === 'object') {
 
       // Components sorting by alphabet
-      if (this.parent && this.parent.key && this.parent.key && this.parent.key === 'components'
+      if (this.parent && this.parent.key && this.path[0] === 'components' && this.parent.key === 'components'
         && sortComponentsSet.length > 0 && sortComponentsSet.includes(this.key)
       ) {
         // debugStep = 'Component sorting by alphabet'
-        node = prioritySort(node, []);
+        this.update(prioritySort(node, []));
       }
 
       // Generic sorting

@@ -12,7 +12,7 @@ const tests = fs.readdirSync(__dirname).filter(file => {
 });
 
 // SELECTIVE TESTING DEBUG
-// const tests = ['yaml-filter-unused-components']
+// const tests = ['yaml-sort-components']
 // destroyOutput = true
 
 describe('asyncapi-format tests', () => {
@@ -111,25 +111,24 @@ describe('asyncapi-format tests', () => {
           }
         }
 
-        // try {
-        //   // Load customSortComponents.yaml
-        //   sortComponentsFile = path.join(__dirname, test, 'customSortComponents.yaml');
-        //   // sortOptions.sortSet = jy.load(fs.readFileSync(sortFile, 'utf8'));
-        //   sortComponentsOptions.sortComponentsSet = jy.load(fs.readFileSync(sortComponentsFile, 'utf8'));
-        //   options = Object.assign({}, options, sortComponentsOptions);
-        // } catch (ex) {
-        //   // console.error('ERROR Load customSort.yaml', ex)
-        //   try {
-        //     // Fallback to customSort.json
-        //     sortComponentsFile = path.join(__dirname, test, 'customSortComponents.json');
-        //     sortComponentsOptions.sortComponentsSet = JSON.parse(fs.readFileSync(sortComponentsFile, 'utf8'));
-        //     options = Object.assign({}, options, sortComponentsOptions);
-        //   } catch (ex) {
-        //     // No options found. defaultSort.json will be used
-        //     // console.error('ERROR Load customSort.json', ex)
-        //     options.sortComponentsOptions = require('../defaultSortComponents.json');
-        //   }
-        // }
+        try {
+          // Load customSortComponents.yaml
+          sortComponentsFile = path.join(__dirname, test, 'customSortComponents.yaml');
+          sortComponentsOptions.sortComponentsSet = jy.load(fs.readFileSync(sortComponentsFile, 'utf8'));
+          options = Object.assign({}, options, sortComponentsOptions);
+        } catch (ex) {
+          // console.error('ERROR Load customSort.yaml', ex)
+          try {
+            // Fallback to customSort.json
+            sortComponentsFile = path.join(__dirname, test, 'customSortComponents.json');
+            sortComponentsOptions.sortComponentsSet = JSON.parse(fs.readFileSync(sortComponentsFile, 'utf8'));
+            options = Object.assign({}, options, sortComponentsOptions);
+          } catch (ex) {
+            // No options found. defaultSort.json will be used
+            // console.error('ERROR Load customSort.json', ex)
+            options.sortComponentsOptions = require('../defaultSortComponents.json');
+          }
+        }
 
         try {
           // Load input.yaml
