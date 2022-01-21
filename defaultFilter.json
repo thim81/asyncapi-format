@@ -1,7 +1,10 @@
 {
   "operations": [],
+  "inverseOperations": [],
   "tags": [],
+  "inverseTags": [],
   "operationIds": [],
+  "inverseOperationIds": [],
   "flags": [],
   "flagValues": [],
   "unusedComponents": [],
