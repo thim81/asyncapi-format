@@ -175,7 +175,7 @@ async function asyncapiFilter(oaObj, options) {
   // Inverse object filters
   const inverseFilterKeys = [...filterSet.inverseOperations];
   const inverseFilterProps = [...filterSet.inverseOperationIds];
-  // const inverseFilterArray = [...filterSet.inverseTags];
+  const inverseFilterArray = [...filterSet.inverseTags];
 
   const stripFlags = [...filterSet.stripFlags];
   const stripUnused = [...filterSet.unusedComponents];
@@ -264,8 +264,28 @@ async function asyncapiFilter(oaObj, options) {
       this.remove();
     }
 
+    // Filter out operations not matching channels > tags, when Inverse tags is set
+    if (inverseFilterArray.length > 0 && this.path[0] === 'channels' && this.level === 2 && node.tags === undefined) {
+      // debugFilterStep = 'Filter - Single field - Inverse tags without tags'
+      this.remove();
+    }
+
     // Array field matching
     if (Array.isArray(node)) {
+      // Filter out object matching the inverse "tags"
+      if (inverseFilterArray.length > 0 && this.key === 'tags' && this.path[0] === 'channels'
+        && !node.some(e => inverseFilterArray.includes(e.name))) {
+        // debugFilterStep = 'Filter - inverse tags'
+        this.parent.delete();
+      }
+
+      // Filter out the top level tags matching the inverse "tags"
+      if (inverseFilterArray.length > 0 && this.key === 'tags' && this.path[0] === 'tags' && this.level === 0) {
+        // debugFilterStep = 'Filter - inverse top tags'
+        node = node.filter(value => inverseFilterArray.includes(value.name))
+        this.update(node);
+      }
+
       // Filter out object matching the "tags"
       if (filterArray.length > 0 && this.key === 'tags' && filterArray.some(i => node.includes(i))) {
         // debugFilterStep = 'Filter - tags'
@@ -438,7 +458,7 @@ async function asyncapiChangeCase(asObj, options) {
   let defaultCasing = {}; // JSON.parse(fs.readFileSync(__dirname + "/defaultFilter.json", 'utf8'))
   let casingSet = Object.assign({}, defaultCasing, options.casingSet);
 
-  let debugCasingStep = '' // uncomment // debugFilterStep below to see which sort part is triggered
+  let debugCasingStep = '' // uncomment // debugCasingStep below to see which sort part is triggered
 
   // Recursive traverse through OpenAPI document to update components
   traverse(jsonObj).forEach(function (node) {
