@@ -172,6 +172,11 @@ async function asyncapiFilter(oaObj, options) {
   const filterArray = [...filterSet.tags];
   const filterProps = [...filterSet.operationIds, ...filterSet.flags, ...fixedFlags];
 
+  // Inverse object filters
+  // const inverseFilterKeys = [...filterSet.inverseOperations];
+  const inverseFilterProps = [...filterSet.inverseOperationIds];
+  // const inverseFilterArray = [...filterSet.inverseTags];
+
   const stripFlags = [...filterSet.stripFlags];
   const stripUnused = [...filterSet.unusedComponents];
   const textReplace = filterSet.textReplace || [];
@@ -244,6 +249,17 @@ async function asyncapiFilter(oaObj, options) {
       this.remove();
     }
 
+    // Object field matching
+    if (isObject(node)) {
+      // Filter out fields without operationIds, when Inverse operationIds is set
+      if (inverseFilterProps.length > 0 && this.path[0] === 'channels' && node.operationId === undefined
+        && (this.key === 'publish' || this.key === 'subscribe')
+      ) {
+        debugFilterStep = 'Filter - Single field - Inverse operationIds without operationIds'
+        this.remove();
+      }
+    }
+
     // Array field matching
     if (Array.isArray(node)) {
       // Filter out object matching the "tags"
@@ -310,6 +326,12 @@ async function asyncapiFilter(oaObj, options) {
             this.parent.remove();
           }
         }
+      }
+
+      // Filter out fields matching the inverse operationIds
+      if (inverseFilterProps.length > 0 && this.key === 'operationId' && !inverseFilterProps.includes(node)) {
+        // debugFilterStep = 'Filter - Single field - Inverse operationIds'
+        this.parent.remove();
       }
 
       // Filter out fields matching the operationIds
