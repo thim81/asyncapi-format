@@ -188,16 +188,19 @@ matching item from the AsyncAPI document. You can combine multiple types to filt
 For more complex use-cases, we can advise the excellent https://github.com/Mermade/openapi-filter package, which has 
 extended options for filtering AsyncAPI documents.
 
-| Type                | Description                         | Type  | Examples                                    |
-|---------------------|-------------------------------------|-------|---------------------------------------------|
-| operations          | AsyncAPI operations.                | array | ['subscribe','publish']                     |
-| tags                | AsyncAPI tags.                      | array | ['measure','command']                       |
-| operationIds        | AsyncAPI operation ID's.            | array | ['turnOff','dimLight']                      |
-| flags               | Custom flags                        | array | ['x-exclude','x-internal']                  |
-| flagValues          | Custom flags with a specific value  | array | ['x-version: 1.0','x-version: 3.0']       |
-| unusedComponents    | Unused components                   | array | ['examples','schemas']                      |
-| stripFlags          | Custom flags that will be stripped  | array | ['x-exclude','x-internal']                  |
-| textReplace         | Search & replace values to replace  | array | [{'searchFor':'API','replaceWith':'Event'}] |
+| Type                | Description                               | Type  | Examples                                    |
+|---------------------|-------------------------------------------|-------|---------------------------------------------|
+| operations          | AsyncAPI operations                       | array | ['subscribe','publish']                     |
+| inverseOperations   | AsyncAPI operations that will be kept.    | array | ['subscribe','publish']                     |
+| tags                | AsyncAPI tags.                            | array | ['measure','command']                       |
+| inverseTags         | AsyncAPI tags that will be kept           | array | ['measure','command']                              |
+| operationIds        | AsyncAPI operation ID's.                  | array | ['turnOff','dimLight']                      |
+| inverseOperationIds | AsyncAPI operation ID's that will be kept | array | ['turnOff','dimLight']                      |
+| flags               | Custom flags                              | array | ['x-exclude','x-internal']                  |
+| flagValues          | Custom flags with a specific value        | array | ['x-version: 1.0','x-version: 3.0']         |
+| unusedComponents    | Unused components                         | array | ['examples','schemas']                      |
+| stripFlags          | Custom flags that will be stripped        | array | ['x-exclude','x-internal']                  |
+| textReplace         | Search & replace values to replace        | array | [{'searchFor':'API','replaceWith':'Event'}] |
 
 Some more details on the available filter types:
 
@@ -226,6 +229,8 @@ channels:
                 $ref: '#/components/messages/turnOnOff'
 ```
 
+=> **inverseOperations**: This option does the inverse filtering, by keeping only the operations defined and remove all other operations.
+
 ### Filter - tags
 
 => **tags**: Refers to the "tags" field from the "Operation
@@ -246,20 +251,18 @@ tags:
       description: Light commands
     - name: measure
       description: Measurement data
-components:
-    messages:
-        lightMeasured:
-            name: lightMeasured
-            title: Light measured
-            summary: Inform about environmental lighting conditions of a particular streetlight.
-            contentType: application/json
-            traits:
-                - $ref: '#/components/messageTraits/commonHeaders'
-            payload:
-                $ref: "#/components/schemas/lightMeasuredPayload"
-            tags:
-                - measure
+channels:
+  smartylighting.streetlights.measured:
+    description: The topic on which measured values may be produced and consumed.
+    publish:
+        summary: Inform about environmental lighting conditions of a particular streetlight.
+        operationId: receiveLightMeasurement
+        tags:
+            - name: measure
+            - name: command
 ```
+
+=> **inverseTags**: This option does the inverse filtering, by keeping only the tags defined and remove all other tags, including the operations without a tags.
 
 ### Filter - operationIds
 
@@ -282,6 +285,8 @@ channels:
             operationId: turnOn
 ```
 
+=> **inverseOperationIds**: This option does the inverse filtering, by keeping only the operationIds defined and remove all other operationIds, including the operations without an operationId.
+
 ### Filter - flags
 
 => **flags**: Refers to a custom property that can be set on any field in the AsyncAPI document.
@@ -303,6 +308,7 @@ channels:
         subscribe:
             operationId: turnOn
 ```
+
 ### Filter - flagValues
 
 => **flagValues**: Refers to a flag, custom property which can be set on any field in the AsyncAPI document, and the combination with the value for that flag.
@@ -527,6 +533,7 @@ channels:
     subscribe:
       operationId: measured-streetlight
 ```
+
 ### Format casing - model & schema properties
 
 => **properties**: Refers to all the schema properties, that are defined inline in the channels and the models in the components section of the AsyncAPI document.
