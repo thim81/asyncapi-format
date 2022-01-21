@@ -173,7 +173,7 @@ async function asyncapiFilter(oaObj, options) {
   const filterProps = [...filterSet.operationIds, ...filterSet.flags, ...fixedFlags];
 
   // Inverse object filters
-  // const inverseFilterKeys = [...filterSet.inverseOperations];
+  const inverseFilterKeys = [...filterSet.inverseOperations];
   const inverseFilterProps = [...filterSet.inverseOperationIds];
   // const inverseFilterArray = [...filterSet.inverseTags];
 
@@ -242,22 +242,26 @@ async function asyncapiFilter(oaObj, options) {
         comps.operationTraits[compOpTraits] = {...comps.operationTraits[compOpTraits], used: true};
       }
     }
-    // Filter out object matching the "operations"
-    if (filterKeys.length > 0 && filterKeys.includes(this.key)) {
-      // debugFilterStep = 'Filter - operations'
-      // Parent has other nodes, so remove only targeted node
+
+    // Filter out object matching the inverse "operations"
+    if (inverseFilterKeys.length > 0 && !inverseFilterKeys.includes(this.key) && operationVerbs.includes(this.key)
+      && this.path[0] === 'channels' && this.level === 3) {
+      // debugFilterStep = 'Filter - inverse operations'
       this.remove();
     }
 
-    // Object field matching
-    if (isObject(node)) {
-      // Filter out fields without operationIds, when Inverse operationIds is set
-      if (inverseFilterProps.length > 0 && this.path[0] === 'channels' && node.operationId === undefined
-        && (this.key === 'publish' || this.key === 'subscribe')
-      ) {
-        debugFilterStep = 'Filter - Single field - Inverse operationIds without operationIds'
-        this.remove();
-      }
+    // Filter out object matching the "operations"
+    if (filterKeys.length > 0 && filterKeys.includes(this.key)) {
+      // debugFilterStep = 'Filter - operations'
+      this.remove();
+    }
+
+    // Filter out fields without operationIds, when Inverse operationIds is set
+    if (inverseFilterProps.length > 0 && this.path[0] === 'channels' && node.operationId === undefined
+      && operationVerbs.includes(this.key)
+    ) {
+      // debugFilterStep = 'Filter - Single field - Inverse operationIds without operationIds'
+      this.remove();
     }
 
     // Array field matching
