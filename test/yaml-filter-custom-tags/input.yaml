@@ -47,6 +47,9 @@ channels:
     publish:
       summary: Inform about environmental lighting conditions of a particular streetlight.
       operationId: receiveLightMeasurement
+      tags:
+        - metadata
+        - measure
       traits:
         - $ref: '#/components/operationTraits/kafka'
       message:
@@ -57,6 +60,9 @@ channels:
         $ref: '#/components/parameters/streetlightId'
     subscribe:
       operationId: turnOn
+      tags:
+        - user
+        - measure
       traits:
         - $ref: '#/components/operationTraits/kafka'
       message:
@@ -67,6 +73,9 @@ channels:
         $ref: '#/components/parameters/streetlightId'
     subscribe:
       operationId: turnOff
+      tags:
+        - foo
+        - bar
       traits:
         - $ref: '#/components/operationTraits/kafka'
       message:

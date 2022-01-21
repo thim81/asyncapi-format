@@ -42,29 +42,19 @@ channels:
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
-    publish:
-      summary: Inform about environmental lighting conditions of a particular streetlight.
-      operationId: receiveLightMeasurement
-      traits:
-        - $ref: '#/components/operationTraits/kafka'
-      message:
-        $ref: '#/components/messages/lightMeasured'
   smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
-    subscribe:
-      operationId: turnOn
-      traits:
-        - $ref: '#/components/operationTraits/kafka'
-      message:
-        $ref: '#/components/messages/turnOnOff'
   smartylighting.streetlights.1.0.action.{streetlightId}.turn.off:
     parameters:
       streetlightId:
         $ref: '#/components/parameters/streetlightId'
     subscribe:
       operationId: turnOff
+      tags:
+        - foo
+        - bar
       traits:
         - $ref: '#/components/operationTraits/kafka'
       message:
