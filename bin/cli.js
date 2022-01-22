@@ -129,7 +129,7 @@ async function run(asFile, options) {
     infoOut(`- Casing file:\t\t${options.casingFile}`) // LOG - Casing file
     try {
       let casingOptions = {casingSet: {}}
-      casingOptions.casingSet =  jy.load(fs.readFileSync(options.casingFile, 'utf8'));
+      casingOptions.casingSet = jy.load(fs.readFileSync(options.casingFile, 'utf8'));
       options = Object.assign({}, options, casingOptions);
     } catch (err) {
       console.error('\x1b[31m', `Casing file error - no such file or directory "${options.casingFile}"`)
