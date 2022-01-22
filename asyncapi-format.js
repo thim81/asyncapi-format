@@ -395,15 +395,15 @@ async function asyncapiFilter(oaObj, options) {
 
   if (stripUnused.length > 0) {
     const optFs = get(options, 'filterSet.unusedComponents', []) || [];
-    unusedComp.schemas = Object.keys(comps.schemas || {}).filter(key => !get(comps, `schemas[${key}].used`)); //comps.schemas[key]?.used);
+    unusedComp.schemas = Object.keys(comps.schemas || {}).filter(key => !isUsedComp(comps.schemas, key)); //comps.schemas[key]?.used);
     if (optFs.includes('schemas')) options.unusedComp.schemas = [...options.unusedComp.schemas, ...unusedComp.schemas];
-    unusedComp.messages = Object.keys(comps.messages || {}).filter(key => !get(comps, `messages[${key}].used`));//!comps.messages[key]?.used);
+    unusedComp.messages = Object.keys(comps.messages || {}).filter(key => !isUsedComp(comps.messages, key));//!comps.messages[key]?.used);
     if (optFs.includes('messages')) options.unusedComp.messages = [...options.unusedComp.messages, ...unusedComp.messages];
-    unusedComp.parameters = Object.keys(comps.parameters || {}).filter(key => !get(comps, `parameters[${key}].used`));//!comps.parameters[key]?.used);
+    unusedComp.parameters = Object.keys(comps.parameters || {}).filter(key => !isUsedComp(comps.parameters, key));//!comps.parameters[key]?.used);
     if (optFs.includes('parameters')) options.unusedComp.parameters = [...options.unusedComp.parameters, ...unusedComp.parameters];
-    unusedComp.messageTraits = Object.keys(comps.messageTraits || {}).filter(key => !get(comps, `messageTraits[${key}].used`));//!comps.messageTraits[key]?.used);
+    unusedComp.messageTraits = Object.keys(comps.messageTraits || {}).filter(key => !isUsedComp(comps.messageTraits, key));//!comps.messageTraits[key]?.used);
     if (optFs.includes('messageTraits')) options.unusedComp.messageTraits = [...options.unusedComp.messageTraits, ...unusedComp.messageTraits];
-    unusedComp.operationTraits = Object.keys(comps.operationTraits || {}).filter(key => !get(comps, `operationTraits[${key}].used`));//!comps.operationTraits[key]?.used);
+    unusedComp.operationTraits = Object.keys(comps.operationTraits || {}).filter(key => !isUsedComp(comps.operationTraits, key));//!comps.operationTraits[key]?.used);
     if (optFs.includes('operationTraits')) options.unusedComp.operationTraits = [...options.unusedComp.operationTraits, ...unusedComp.operationTraits];
     unusedComp.meta.total = unusedComp.schemas.length + unusedComp.messages.length + unusedComp.parameters.length + unusedComp.messageTraits.length + unusedComp.operationTraits.length
   }
@@ -417,16 +417,11 @@ async function asyncapiFilter(oaObj, options) {
         this.delete();
       }
     }
-
     // Remove empty objects
     if (node && Object.keys(node).length === 0 && node.constructor === Object && this.parent.key !== 'security') {
       // debugFilterStep = 'Filter - Remove empty objects'
       this.delete();
     }
-    // Remove message items without operations
-    // if (this.parent && this.parent.key === 'messages' && !operationVerbs.some(i => this.keys.includes(i))) {
-    //     this.delete();
-    // }
     // Strip flags
     if (stripFlags.length > 0 && stripFlags.includes(this.key)) {
       // debugFilterStep = 'Filter - Strip flags'
@@ -648,7 +643,7 @@ function changeObjKeysCase(obj, caseType) {
 }
 
 /**
- * Change object keys case in array  function
+ * Change object keys case in array function
  * @param {object} node
  * @param {string} caseType
  * @returns {*}
@@ -711,7 +706,7 @@ function changeCase(valueAsString, caseType) {
 }
 
 /**
- * Function fo escaping input to be treated as a literal string within a regular expression
+ * Function for escaping input to be treated as a literal string within a regular expression
  * @param string
  * @returns {*}
  */
@@ -733,6 +728,20 @@ function get(obj, path, defaultValue = undefined) {
 
   const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
   return result === undefined || result === obj ? defaultValue : result;
+}
+
+/**
+ * Validate function if component contains a used property
+ * @param obj
+ * @param prop
+ * @returns {boolean}
+ */
+function isUsedComp(obj, prop) {
+  if (!isObject(obj)) return false
+  if (!isString(prop)) return false
+  const comp = obj[prop]
+  if (comp.used && comp.used === true) return true
+  return false
 }
 
 module.exports = {
