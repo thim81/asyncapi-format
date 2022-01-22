@@ -161,7 +161,7 @@ re-ordered.
 The default sorting based on the defined order (listed in the table below), which is stored in
 the [defaultSort.json](https://github.com/thim81/asyncapi-format/blob/main/defaultSort.json) file.
 
-You can easily modify this by specifying your own ordering per key, which can passed on to the CLI (see below for an
+You can easily modify this by specifying your own ordering per key, which can be passed on to the CLI (see below for an
 example on how to do this).
 
 | Key         | Ordered by                                                                                                      | AsyncAPI reference         |
