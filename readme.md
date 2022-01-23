@@ -191,10 +191,10 @@ extended options for filtering AsyncAPI documents.
 | Type                | Description                               | Type  | Examples                                    |
 |---------------------|-------------------------------------------|-------|---------------------------------------------|
 | operations          | AsyncAPI operations                       | array | ['subscribe','publish']                     |
-| inverseOperations   | AsyncAPI operations that will be kept.    | array | ['subscribe','publish']                     |
-| tags                | AsyncAPI tags.                            | array | ['measure','command']                       |
-| inverseTags         | AsyncAPI tags that will be kept           | array | ['measure','command']                              |
-| operationIds        | AsyncAPI operation ID's.                  | array | ['turnOff','dimLight']                      |
+| inverseOperations   | AsyncAPI operations that will be kept     | array | ['subscribe','publish']                     |
+| tags                | AsyncAPI tags                             | array | ['measure','command']                       |
+| inverseTags         | AsyncAPI tags that will be kept           | array | ['measure','command']                       |
+| operationIds        | AsyncAPI operation ID's                   | array | ['turnOff','dimLight']                      |
 | inverseOperationIds | AsyncAPI operation ID's that will be kept | array | ['turnOff','dimLight']                      |
 | flags               | Custom flags                              | array | ['x-exclude','x-internal']                  |
 | flagValues          | Custom flags with a specific value        | array | ['x-version: 1.0','x-version: 3.0']         |
@@ -206,7 +206,7 @@ Some more details on the available filter types:
 
 ### Filter - operations
 
-=> **operations**: Refers to the "Channel Item Object" https://www.asyncapi.com/docs/specifications/2.0.0#channelsObject
+=> **operations**: Refers to the [Channel Item Object](https://www.asyncapi.com/docs/specifications/2.0.0#channelsObject)
 
 This will remove all fields and attached fields that match the verbs. In the example below, this would mean that
 all `publish`, `subscribe` items would be removed from the AsyncAPI document.
@@ -233,8 +233,7 @@ channels:
 
 ### Filter - tags
 
-=> **tags**: Refers to the "tags" field from the "Operation
-  Object" https://www.asyncapi.com/docs/specifications/2.0.0#operationObject
+=> **tags**: Refers to the "tags" field from the [Operation Object](https://www.asyncapi.com/docs/specifications/2.0.0#operationObject)
 
 This will remove all fields and attached fields that match the tags. In the example below, this would mean that all
 items with the tags `command` or `measure` would be removed from the AsyncAPI document.
@@ -266,8 +265,7 @@ channels:
 
 ### Filter - operationIds
 
-=> **operationIds**: Refers to the "operationId" field from the "Operation
-  Object" https://www.asyncapi.com/docs/specifications/2.0.0#operationObject
+=> **operationIds**: Refers to the "operationId" field from the [Operation Object](https://www.asyncapi.com/docs/specifications/2.0.0#operationObject)
 
 This will remove specific fields and attached fields that match the operation ID's. In the example below, this would
 mean that the item with operationID `turnOff` would be removed from the AsyncAPI document.
@@ -714,7 +712,7 @@ operationIds:
 
 ## CLI rename usage
 
-- Format a AsyncAPI document by changing the title and saves it as a new JSON file
+- Format an AsyncAPI document by changing the title and saves it as a new JSON file
 
 During CI/CD pipelines, you might want to create different results of the AsyncAPI document. Having the option to rename
 them might make it easier to work with the results, so that is why we provide this command option.
