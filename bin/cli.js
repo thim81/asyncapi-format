@@ -21,6 +21,7 @@ program
   .option('-f, --filterFile <filterFile>', 'The file to specify filter rules.')
   .option('-c, --configFile <configFile>', 'The file with the AsyncAPI-format CLI options.')
   .option('--no-sort', 'dont sort the AsyncAPI file')
+  .option('--sortComponentsFile <sortComponentsFile>', 'The file with components to sort alphabetically')
   .option('--lineWidth <lineWidth>', 'max line width of YAML output', -1)
   .option('--rename <oaTitle>', 'overwrite the title in the AsyncAPI document.')
   .option('--json', 'print the file to stdout as JSON')
@@ -83,7 +84,8 @@ async function run(asFile, options) {
     try {
       let sortOptions = {sortSet: {}}
       let sortFile = (options.sortFile) ? options.sortFile : __dirname + "/../defaultSort.json"
-      infoOut(`- Sort file:\t\t${sortFile}`) // LOG - sort file
+      let sortFileName = (options.sortFile) ? options.sortFile : "(defaultSort.json)"
+      infoOut(`- Sort file:\t\t${sortFileName}`) // LOG - sort file
       sortOptions.sortSet = jy.load(fs.readFileSync(sortFile, 'utf8'));
       options = Object.assign({}, options, sortOptions);
     } catch (err) {
@@ -111,7 +113,7 @@ async function run(asFile, options) {
 
   // apply components sorting by alphabet, if file is present
   if (options && options.sortComponentsFile) {
-    infoOut(`- Sort Components file:\t ${options.sortComponentsFile}`) // LOG - Sort file
+    infoOut(`- Sort Components file:\t${options.sortComponentsFile}`) // LOG - Sort file
     try {
       let sortComponentsOptions = {sortComponentsSet: {}}
       sortComponentsOptions.sortComponentsSet = jy.load(fs.readFileSync(options.sortComponentsFile, 'utf8'));
