@@ -46,7 +46,7 @@
     "release": "np --branch main"
   },
   "dependencies": {
-    "case-anything": "^2.1.2",
+    "case-anything": "2.1.2",
     "commander": "^7.1.0",
     "js-yaml": "^4.1.0",
     "traverse": "^0.6.6"
