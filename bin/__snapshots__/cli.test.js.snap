@@ -3,17 +3,17 @@
 exports[`asyncapi-format CLI command should output the help 1`] = `
 "Usage: cli <file> [options]
 
-Format a AsyncAPI document by ordering and filtering fields.
+Format an AsyncAPI document by ordering, formatting and filtering fields.
 
 Options:
-  -o, --output <output>                      write the formatted AsyncAPI to an output file path.
-  -s, --sortFile <sortFile>                  The file to specify custom OpenAPI AsyncAPI ordering.
-  -c, --casingFile <casingFile>              The file to specify casing rules.
-  -f, --filterFile <filterFile>              The file to specify filter rules.
-  -c, --configFile <configFile>              The file with the AsyncAPI-format CLI options.
-  --no-sort                                  dont sort the AsyncAPI file
-  --sortComponentsFile <sortComponentsFile>  The file with components to sort alphabetically
-  --lineWidth <lineWidth>                    max line width of YAML output (default: -1)
+  -o, --output <output>                      save the formatted AsyncAPI file as JSON/YAML
+  -s, --sortFile <sortFile>                  the file to specify custom OpenAPI AsyncAPI ordering
+  -c, --casingFile <casingFile>              the file to specify casing rules
+  -f, --filterFile <filterFile>              the file to specify filter rules
+  -c, --configFile <configFile>              the file with the AsyncAPI-format CLI options
+  --no-sort                                  don't sort the AsyncAPI file
+  --sortComponentsFile <sortComponentsFile>  the file with components to sort alphabetically
+  --lineWidth <lineWidth>                    :ax line width of YAML output (default: -1)
   --rename <oaTitle>                         overwrite the title in the AsyncAPI document.
   --json                                     print the file to stdout as JSON
   --yaml                                     print the file to stdout as YAML

@@ -111,7 +111,7 @@ Arguments:
 
 Options:
 
-  --output, -o          Save the formated AsyncAPI file as JSON/YAML            [path]
+  --output, -o          Save the formatted AsyncAPI file as JSON/YAML           [path]
   
   --sortFile            The file to specify custom AsyncAPI fields ordering     [path]
   --casingFile          The file to specify casing rules                        [path]
