@@ -42,7 +42,6 @@ function sortObjectByKeyNameList(object, sortWith) {
     }
     return total;
   }, {});
-  // }, Object.create(null));
 }
 
 /**
@@ -98,7 +97,7 @@ async function asyncapiSort(oaObj, options) {
 
   // Recursive traverse through AsyncAPI document
   traverse(jsonObj).forEach(function (node) {
-    // if (obj.hasOwnProperty(this.key) && obj[this.key] && typeof obj[this.key] === 'object') {
+
     if (typeof node === 'object') {
 
       // Components sorting by alphabet
@@ -289,7 +288,6 @@ async function asyncapiFilter(oaObj, options) {
       // Filter out object matching the "tags"
       if (filterArray.length > 0 && this.key === 'tags' && filterArray.some(i => node.includes(i))) {
         // debugFilterStep = 'Filter - tags'
-        // Top parent has other nodes, so remove only targeted parent node of matching element
         this.parent.delete();
       }
 
@@ -328,7 +326,6 @@ async function asyncapiFilter(oaObj, options) {
       // Filter out fields matching the flags
       if (filterProps.length > 0 && filterProps.includes(this.key)) {
         // debugFilterStep = 'Filter - Single field - flags'
-        // Top parent has other nodes, so remove only targeted parent node of matching element
         this.parent.remove();
       }
 
