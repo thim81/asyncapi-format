@@ -1,6 +1,6 @@
 ## unreleased
 
-## [1.10.0] - 2022-01-24
+## [1.1.0] - 2022-01-24
 
 - Formatting - Change casing of AsyncAPI elements
 - Formatting - Sort components objects alphabetically
@@ -13,6 +13,7 @@
 - Filtering - Strip flags from result
 - Improved asyncapi-format CLI output
 - Extended documentation
+- Extended CLI tests
 - Switched from Mocha testing framework to Jest
 - Added asyncapi-format logo
 
