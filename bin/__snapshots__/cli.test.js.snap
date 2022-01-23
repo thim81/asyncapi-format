@@ -93,7 +93,7 @@ exports[`asyncapi-format CLI command should use the sortComponentsFile 1`] = `
 "================================================================================
 OpenAPI-Format CLI settings:
 - Sort file:		(defaultSort.json)
-- Sort Comps. file:	test/yaml-sort-components/customSortComponents.yaml
+- Sort Components file:	test/yaml-sort-components/customSortComponents.yaml
 - Input file:		test/yaml-sort-components/input.yaml
 [32m================================================================================[0m
 [32m✅  AsyncAPI formatted successfully[0m
