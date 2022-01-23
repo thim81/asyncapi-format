@@ -1,5 +1,22 @@
 ## unreleased
 
+## [1.1.0] - 2022-01-24
+
+- Formatting - Change casing of AsyncAPI elements
+- Formatting - Sort components objects alphabetically
+- Filtering - Inverse filtering for operationIds via `inverseOperationIds`
+- Filtering - Inverse filtering for tags via `inverseTags`
+- Filtering - Inverse filtering for methods via `inverseOperations`
+- Filtering - Replace words/characters in description, summary, URL fields with new value
+- Filtering - Removal of "unused" components
+- Filtering - Removal by flag values
+- Filtering - Strip flags from result
+- Improved asyncapi-format CLI output
+- Extended documentation
+- Extended CLI tests
+- Switched from Mocha testing framework to Jest
+- Added asyncapi-format logo
+
 ## [1.0.2] - 2021-03-16
 
 - Corrected typo's

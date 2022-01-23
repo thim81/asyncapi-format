@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`asyncapi-format CLI command should output the help 1`] = `
+"Usage: cli <file> [options]
+
+Format an AsyncAPI document by ordering, formatting and filtering fields.
+
+Options:
+  -o, --output <output>                      save the formatted AsyncAPI file as JSON/YAML
+  -s, --sortFile <sortFile>                  the file to specify custom OpenAPI AsyncAPI ordering
+  -c, --casingFile <casingFile>              the file to specify casing rules
+  -f, --filterFile <filterFile>              the file to specify filter rules
+  -c, --configFile <configFile>              the file with the AsyncAPI-format CLI options
+  --no-sort                                  don't sort the AsyncAPI file
+  --sortComponentsFile <sortComponentsFile>  the file with components to sort alphabetically
+  --lineWidth <lineWidth>                    max line width of YAML output (default: -1)
+  --rename <oaTitle>                         overwrite the title in the AsyncAPI document
+  --json                                     print the file to stdout as JSON
+  --yaml                                     print the file to stdout as YAML
+  --version                                  output the version number
+  -v, --verbose                              verbosity that can be increased (default: 0)
+  -h, --help                                 display help for command
+"
+`;
+
+exports[`asyncapi-format CLI command should output the version 1`] = `
+"1.0.2
+"
+`;
+
+exports[`asyncapi-format CLI command should show unused components 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Filter file:		test/yaml-filter-unused-components/customFilter.yaml
+- Input file:		test/yaml-filter-unused-components/input.yaml
+================================================================================
+Removed unused components:
+- components/schemas		 \\"dimLightPayload\\"
+- components/messages		 \\"dimLight\\"
+- components/parameters		 \\"streetlightId\\"
+- components/messageTraits	 \\"commonHeaders\\"
+- components/operationTraits	 \\"kafka\\"
+Total components removed: 5
+[32m================================================================================[0m
+[32m✅  AsyncAPI filtered & formatted successfully[0m
+[32m================================================================================[0m
+"
+`;
+
+exports[`asyncapi-format CLI command should use the casingFile 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Casing file:		test/yaml-casing/customCasing.yaml
+- Input file:		test/yaml-casing/input.yaml
+[32m================================================================================[0m
+[32m✅  AsyncAPI formatted successfully[0m
+[32m================================================================================[0m
+"
+`;
+
+exports[`asyncapi-format CLI command should use the filterFile 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Filter file:		test/yaml-filter-custom/customFilter.yaml
+- Input file:		test/yaml-filter-custom/input.yaml
+[32m================================================================================[0m
+[32m✅  AsyncAPI filtered & formatted successfully[0m
+[32m================================================================================[0m
+"
+`;
+
+exports[`asyncapi-format CLI command should use the no-sort 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Input file:		test/yaml-no-sort/input.yaml
+[32m================================================================================[0m
+[32m✅  AsyncAPI formatted successfully[0m
+[32m================================================================================[0m
+"
+`;
+
+exports[`asyncapi-format CLI command should use the rename 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Input file:		test/yaml-rename/input.yaml
+[32m================================================================================[0m
+[32m✅  AsyncAPI formatted successfully[0m
+[32m================================================================================[0m
+"
+`;
+
+exports[`asyncapi-format CLI command should use the sortComponentsFile 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Sort file:		(defaultSort.json)
+- Sort Components file:	test/yaml-sort-components/customSortComponents.yaml
+- Input file:		test/yaml-sort-components/input.yaml
+[32m================================================================================[0m
+[32m✅  AsyncAPI formatted successfully[0m
+[32m================================================================================[0m
+"
+`;
+
+exports[`asyncapi-format CLI command should use the sortFile 1`] = `
+"================================================================================
+OpenAPI-Format CLI settings:
+- Sort file:		test/yaml-custom/customSort.yaml
+- Input file:		test/yaml-custom/input.yaml
+[32m================================================================================[0m
+[32m✅  AsyncAPI formatted successfully[0m
+[32m================================================================================[0m
+"
+`;

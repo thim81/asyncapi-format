@@ -1,0 +1,7 @@
+unusedComponents:
+  - schemas
+  - messages
+  - parameters
+  - messageTraits
+  - operationTraits
+

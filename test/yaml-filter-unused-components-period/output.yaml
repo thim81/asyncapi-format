@@ -1,0 +1,13 @@
+asyncapi: '2.2.0'
+channels:
+  smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
+    subscribe:
+      operationId: turnOn
+      message:
+        $ref: '#/components/messages/turn.On.Off'
+components:
+  messages:
+    turn.On.Off:
+      name: turn.On.Off
+      title: Turn on/off
+      summary: Command a particular streetlight to turn the lights on or off.

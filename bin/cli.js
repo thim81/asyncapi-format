@@ -14,15 +14,16 @@ function increaseVerbosity(dummyValue, previous) {
 program
   .arguments('<asFile>')
   .usage('<file> [options]')
-  .description('Format a AsyncAPI document by ordering and filtering fields.')
-  .option('-o, --output <output>', 'write the formatted AsyncAPI to an output file path.')
-  .option('-s, --sortFile <sortFile>', 'The file to specify custom OpenAPI AsyncAPI ordering.')
-  .option('-c, --casingFile <casingFile>', 'The file to specify casing rules.')
-  .option('-f, --filterFile <filterFile>', 'The file to specify filter rules.')
-  .option('-c, --configFile <configFile>', 'The file with the AsyncAPI-format CLI options.')
-  .option('--no-sort', 'dont sort the AsyncAPI file')
+  .description('Format an AsyncAPI document by ordering, formatting and filtering fields.')
+  .option('-o, --output <output>', 'save the formatted AsyncAPI file as JSON/YAML')
+  .option('-s, --sortFile <sortFile>', 'the file to specify custom OpenAPI AsyncAPI ordering')
+  .option('-c, --casingFile <casingFile>', 'the file to specify casing rules')
+  .option('-f, --filterFile <filterFile>', 'the file to specify filter rules')
+  .option('-c, --configFile <configFile>', 'the file with the AsyncAPI-format CLI options')
+  .option('--no-sort', `don't sort the AsyncAPI file`)
+  .option('--sortComponentsFile <sortComponentsFile>', 'the file with components to sort alphabetically')
   .option('--lineWidth <lineWidth>', 'max line width of YAML output', -1)
-  .option('--rename <oaTitle>', 'overwrite the title in the AsyncAPI document.')
+  .option('--rename <oaTitle>', 'overwrite the title in the AsyncAPI document')
   .option('--json', 'print the file to stdout as JSON')
   .option('--yaml', 'print the file to stdout as YAML')
   .version(require('../package.json').version, '--version')
@@ -83,7 +84,8 @@ async function run(asFile, options) {
     try {
       let sortOptions = {sortSet: {}}
       let sortFile = (options.sortFile) ? options.sortFile : __dirname + "/../defaultSort.json"
-      infoOut(`- Sort file:\t\t${sortFile}`) // LOG - sort file
+      let sortFileName = (options.sortFile) ? options.sortFile : "(defaultSort.json)"
+      infoOut(`- Sort file:\t\t${sortFileName}`) // LOG - sort file
       sortOptions.sortSet = jy.load(fs.readFileSync(sortFile, 'utf8'));
       options = Object.assign({}, options, sortOptions);
     } catch (err) {
@@ -111,7 +113,7 @@ async function run(asFile, options) {
 
   // apply components sorting by alphabet, if file is present
   if (options && options.sortComponentsFile) {
-    infoOut(`- Sort Components file:\t ${options.sortComponentsFile}`) // LOG - Sort file
+    infoOut(`- Sort Components file:\t${options.sortComponentsFile}`) // LOG - Sort file
     try {
       let sortComponentsOptions = {sortComponentsSet: {}}
       sortComponentsOptions.sortComponentsSet = jy.load(fs.readFileSync(options.sortComponentsFile, 'utf8'));
@@ -129,7 +131,7 @@ async function run(asFile, options) {
     infoOut(`- Casing file:\t\t${options.casingFile}`) // LOG - Casing file
     try {
       let casingOptions = {casingSet: {}}
-      casingOptions.casingSet =  jy.load(fs.readFileSync(options.casingFile, 'utf8'));
+      casingOptions.casingSet = jy.load(fs.readFileSync(options.casingFile, 'utf8'));
       options = Object.assign({}, options, casingOptions);
     } catch (err) {
       console.error('\x1b[31m', `Casing file error - no such file or directory "${options.casingFile}"`)
