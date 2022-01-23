@@ -13,8 +13,8 @@ Options:
   -c, --configFile <configFile>              the file with the AsyncAPI-format CLI options
   --no-sort                                  don't sort the AsyncAPI file
   --sortComponentsFile <sortComponentsFile>  the file with components to sort alphabetically
-  --lineWidth <lineWidth>                    :ax line width of YAML output (default: -1)
-  --rename <oaTitle>                         overwrite the title in the AsyncAPI document.
+  --lineWidth <lineWidth>                    max line width of YAML output (default: -1)
+  --rename <oaTitle>                         overwrite the title in the AsyncAPI document
   --json                                     print the file to stdout as JSON
   --yaml                                     print the file to stdout as YAML
   --version                                  output the version number
