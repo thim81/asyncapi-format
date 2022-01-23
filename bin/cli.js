@@ -16,7 +16,7 @@ program
   .usage('<file> [options]')
   .description('Format an AsyncAPI document by ordering, formatting and filtering fields.')
   .option('-o, --output <output>', 'save the formatted AsyncAPI file as JSON/YAML')
-  .option('-s, --sortFile <sortFile>', 'the file to specify custom OpenAPI AsyncAPI ordering')
+  .option('-s, --sortFile <sortFile>', 'the file to specify custom AsyncAPI ordering')
   .option('-c, --casingFile <casingFile>', 'the file to specify casing rules')
   .option('-f, --filterFile <filterFile>', 'the file to specify filter rules')
   .option('-c, --configFile <configFile>', 'the file with the AsyncAPI-format CLI options')
@@ -50,12 +50,12 @@ async function run(asFile, options) {
   const consoleLine = process.stdout.columns ? '='.repeat(process.stdout.columns) : '='.repeat(80)
 
   if (!asFile) {
-    console.error('Please provide a file path for the OpenAPI document');
-    return;
+    console.error('Please provide a file path for the AsyncAPI document');
+    process.exit(1)
   }
 
   infoOut(`${consoleLine}`); // LOG - horizontal rule
-  infoOut(`OpenAPI-Format CLI settings:`) // LOG - config file
+  infoOut(`AsyncAPI-Format CLI settings:`) // LOG - config file
 
   // apply options from config file if present
   if (options && options.configFile) {
@@ -73,6 +73,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -93,6 +94,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -108,6 +110,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -123,6 +126,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -138,6 +142,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -163,7 +168,7 @@ async function run(asFile, options) {
     if (resFormat.data) res = resFormat.data
   }
 
-  // Change case OpenAPI document
+  // Change case AsyncAPI document
   if (options.casingSet) {
     const resFormat = await asyncapiFormat.asyncapiChangeCase(res, options);
     if (resFormat.data) res = resFormat.data

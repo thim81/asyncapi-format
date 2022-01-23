@@ -132,9 +132,11 @@ async function asyncapiSort(oaObj, options) {
             sortedObj[keyRes] = prioritySort(sortedObj[keyRes], sortSet[this.key]);
           }
           this.update(sortedObj);
-        } else if (this.parent && this.parent.key !== 'components') {
-          // } else {
-          // debugStep = 'Generic sorting - properties'
+        } else if (this.path[0] === 'components' && this.path[3] === 'examples') {
+          // debugStep = 'Generic sorting - skip nested components>examples'
+          // Skip nested components>examples values
+        } else {
+          debugStep = 'Generic sorting - properties'
           // Sort list of properties
           this.update(prioritySort(node, sortSet[this.key]));
         }
@@ -291,7 +293,7 @@ async function asyncapiFilter(oaObj, options) {
         this.parent.delete();
       }
 
-      // Filter out the top OpenApi.tags matching the "tags"
+      // Filter out the top level tags matching the "tags"
       if (filterArray.length > 0 && this.key === 'tags' && this.path[0] === 'tags') {
         // debugFilterStep = 'Filter - top tags'
         node = node.filter(value => !filterArray.includes(value.name))
@@ -309,7 +311,7 @@ async function asyncapiFilter(oaObj, options) {
             if (get(this, 'parent.parent.key') && this.parent.parent.key === 'x-tagGroups') {
               // debugFilterStep = 'Filter -x-tagGroups - flagValues - array value'
               const tagGroup = this.parent.node
-              tagGroup['x-openapi-format-filter'] = true
+              tagGroup['x-asyncapi-format-filter'] = true
               this.parent.update(tagGroup)
               // ========================================================================
             } else {
@@ -452,7 +454,7 @@ async function asyncapiChangeCase(asObj, options) {
 
   let debugCasingStep = '' // uncomment // debugCasingStep below to see which sort part is triggered
 
-  // Recursive traverse through OpenAPI document to update components
+  // Recursive traverse through AsyncAPI document to update components
   traverse(jsonObj).forEach(function (node) {
     // Focus only on the components
     if (this.path[0] === 'components') {

@@ -7,7 +7,7 @@ Format an AsyncAPI document by ordering, formatting and filtering fields.
 
 Options:
   -o, --output <output>                      save the formatted AsyncAPI file as JSON/YAML
-  -s, --sortFile <sortFile>                  the file to specify custom OpenAPI AsyncAPI ordering
+  -s, --sortFile <sortFile>                  the file to specify custom AsyncAPI ordering
   -c, --casingFile <casingFile>              the file to specify casing rules
   -f, --filterFile <filterFile>              the file to specify filter rules
   -c, --configFile <configFile>              the file with the AsyncAPI-format CLI options
@@ -30,7 +30,7 @@ exports[`asyncapi-format CLI command should output the version 1`] = `
 
 exports[`asyncapi-format CLI command should show unused components 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Filter file:		test/yaml-filter-unused-components/customFilter.yaml
 - Input file:		test/yaml-filter-unused-components/input.yaml
 ================================================================================
@@ -49,7 +49,7 @@ Total components removed: 5
 
 exports[`asyncapi-format CLI command should use the casingFile 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Casing file:		test/yaml-casing/customCasing.yaml
 - Input file:		test/yaml-casing/input.yaml
 [32m================================================================================[0m
@@ -60,7 +60,7 @@ OpenAPI-Format CLI settings:
 
 exports[`asyncapi-format CLI command should use the filterFile 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Filter file:		test/yaml-filter-custom/customFilter.yaml
 - Input file:		test/yaml-filter-custom/input.yaml
 [32m================================================================================[0m
@@ -71,7 +71,7 @@ OpenAPI-Format CLI settings:
 
 exports[`asyncapi-format CLI command should use the no-sort 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Input file:		test/yaml-no-sort/input.yaml
 [32m================================================================================[0m
 [32m✅  AsyncAPI formatted successfully[0m
@@ -81,7 +81,7 @@ OpenAPI-Format CLI settings:
 
 exports[`asyncapi-format CLI command should use the rename 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Input file:		test/yaml-rename/input.yaml
 [32m================================================================================[0m
 [32m✅  AsyncAPI formatted successfully[0m
@@ -91,7 +91,7 @@ OpenAPI-Format CLI settings:
 
 exports[`asyncapi-format CLI command should use the sortComponentsFile 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Sort file:		(defaultSort.json)
 - Sort Components file:	test/yaml-sort-components/customSortComponents.yaml
 - Input file:		test/yaml-sort-components/input.yaml
@@ -103,7 +103,7 @@ OpenAPI-Format CLI settings:
 
 exports[`asyncapi-format CLI command should use the sortFile 1`] = `
 "================================================================================
-OpenAPI-Format CLI settings:
+AsyncAPI-Format CLI settings:
 - Sort file:		test/yaml-custom/customSort.yaml
 - Input file:		test/yaml-custom/input.yaml
 [32m================================================================================[0m
