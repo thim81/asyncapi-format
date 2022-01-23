@@ -51,7 +51,7 @@ async function run(asFile, options) {
 
   if (!asFile) {
     console.error('Please provide a file path for the AsyncAPI document');
-    return;
+    process.exit(1)
   }
 
   infoOut(`${consoleLine}`); // LOG - horizontal rule
@@ -73,6 +73,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -93,6 +94,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -108,6 +110,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -123,6 +126,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
@@ -138,6 +142,7 @@ async function run(asFile, options) {
       if (options.verbose >= 1) {
         console.error(err)
       }
+      process.exit(1)
     }
   }
 
