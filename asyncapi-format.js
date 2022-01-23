@@ -132,9 +132,11 @@ async function asyncapiSort(oaObj, options) {
             sortedObj[keyRes] = prioritySort(sortedObj[keyRes], sortSet[this.key]);
           }
           this.update(sortedObj);
-        } else if (this.parent && this.parent.key !== 'components') {
-          // } else {
-          // debugStep = 'Generic sorting - properties'
+        } else if (this.path[0] === 'components' && this.path[3] === 'examples') {
+          // debugStep = 'Generic sorting - skip nested components>examples'
+          // Skip nested components>examples values
+        } else {
+          debugStep = 'Generic sorting - properties'
           // Sort list of properties
           this.update(prioritySort(node, sortSet[this.key]));
         }

@@ -49,6 +49,14 @@ components:
       schema:
         type: string
   messages:
+    dimLight:
+      name: dimLight
+      title: Dim light
+      summary: Command a particular streetlight to dim the lights.
+      traits:
+        - $ref: '#/components/messageTraits/commonHeaders'
+      payload:
+        $ref: '#/components/schemas/dimLightPayload'
     lightMeasured:
       name: lightMeasured
       title: Light measured
@@ -66,14 +74,6 @@ components:
         - $ref: '#/components/messageTraits/commonHeaders'
       payload:
         $ref: '#/components/schemas/turnOnOffPayload'
-    dimLight:
-      name: dimLight
-      title: Dim light
-      summary: Command a particular streetlight to dim the lights.
-      traits:
-        - $ref: '#/components/messageTraits/commonHeaders'
-      payload:
-        $ref: '#/components/schemas/dimLightPayload'
   schemas:
     lightMeasuredPayload:
       type: object
