@@ -13,9 +13,6 @@ can output the file with clean indenting, to either JSON or YAML.
 Next to the ordering & formatting, the CLI provides additional options to filter fields & parts of the AsyncAPI document based on
 flags, tags, operations and operationID's.
 
-This `asyncapi-format` CLI is based on [openapi-format](https://github.com/thim81/openapi-format) as a separate
-package to allow customisation specific for AsyncAPI use-cases.
-
 ## Table of content
 * [Use-cases](#use-cases)
 * [Features](#features)
