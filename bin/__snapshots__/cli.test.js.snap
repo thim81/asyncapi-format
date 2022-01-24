@@ -23,11 +23,6 @@ Options:
 "
 `;
 
-exports[`asyncapi-format CLI command should output the version 1`] = `
-"1.0.2
-"
-`;
-
 exports[`asyncapi-format CLI command should show unused components 1`] = `
 "================================================================================
 AsyncAPI-Format CLI settings:

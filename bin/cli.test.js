@@ -3,13 +3,6 @@ const fs = require("fs");
 
 describe("asyncapi-format CLI command", () => {
 
-  it("should output the version", async () => {
-    let result = await testUtils.cli([`--version`], '.');
-    // console.log('result', result)
-    expect(result.code).toBe(0);
-    expect(result.stderr).toMatchSnapshot();
-  });
-
   it("should output the help", async () => {
     let result = await testUtils.cli([`--help`], '.');
     // console.log('result', result)
