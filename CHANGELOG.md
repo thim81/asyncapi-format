@@ -15,6 +15,7 @@
 - Extended documentation
 - Extended CLI tests
 - Switched from Mocha testing framework to Jest
+- Bumped dependencies
 - Added asyncapi-format logo
 
 ## [1.0.2] - 2021-03-16
