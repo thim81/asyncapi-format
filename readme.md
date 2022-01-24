@@ -101,10 +101,8 @@ $ npx asyncapi-format your-asyncapi-file.yaml
 asyncapi-format.js <input-file> -o [ouptut-file] [options]
 
 Arguments:
-  infile   the AsyncAPI document, can be either a .json or .yaml file
-  outfile  the output file is optional and be either a .json or .yaml file. Files that end in `.json` will be formatted 
-  as JSON files that end in `.yaml` or `.yml` will be YAML format
-  
+  input-file   the AsyncAPI document, can be either a .json or .yaml file
+  ouptut-file  the output file is optional and be either a .json or .yaml file.
 
 Options:
 
