@@ -1,5 +1,9 @@
 ## unreleased
 
+## [1.1.1] - 2022-01-28
+
+- Fix unwanted sorting components (#11)
+
 ## [1.1.0] - 2022-01-24
 
 - Formatting - Change casing of AsyncAPI elements
