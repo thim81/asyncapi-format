@@ -134,8 +134,7 @@ async function asyncapiSort(oaObj, options) {
           this.update(sortedObj);
         } else {
           if (this.path[0] === 'components' && (this.path[3] === 'examples' ||
-              (this.parent && this.parent.key === 'components'
-                  && sortComponentsSet.length > 0 && !sortComponentsSet.includes(this.key)))) {
+              (this.parent && this.parent.key === 'components'))) {
             // debugStep = 'Generic sorting - skip nested components>examples'
             // Skip nested components>examples values
             // Skip component objects that are not in the sortComponentsSet

@@ -1,4 +1,4 @@
-asyncapi: '2.2.0'
+asyncapi: 2.2.0
 channels:
   smartylighting.streetlights.1.0.action.{streetlightId}.turn.on:
     subscribe:
