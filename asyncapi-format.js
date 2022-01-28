@@ -132,13 +132,18 @@ async function asyncapiSort(oaObj, options) {
             sortedObj[keyRes] = prioritySort(sortedObj[keyRes], sortSet[this.key]);
           }
           this.update(sortedObj);
-        } else if (this.path[0] === 'components' && this.path[3] === 'examples') {
-          // debugStep = 'Generic sorting - skip nested components>examples'
-          // Skip nested components>examples values
         } else {
-          debugStep = 'Generic sorting - properties'
-          // Sort list of properties
-          this.update(prioritySort(node, sortSet[this.key]));
+          if (this.path[0] === 'components' && (this.path[3] === 'examples' ||
+              (this.parent && this.parent.key === 'components'
+                  && sortComponentsSet.length > 0 && !sortComponentsSet.includes(this.key)))) {
+            // debugStep = 'Generic sorting - skip nested components>examples'
+            // Skip nested components>examples values
+            // Skip component objects that are not in the sortComponentsSet
+          } else {
+            // debugStep = 'Generic sorting - properties'
+            // Sort list of properties
+            this.update(prioritySort(node, sortSet[this.key]));
+          }
         }
       }
     }
